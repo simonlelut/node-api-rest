@@ -1,0 +1,41 @@
+{
+  "name": "teststrucuture",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && nodemon ./build/server.js",
+    "test": "mocha --require ts-node/register tests/**/*.ts",
+    "debug": "tsc && nodemon --nolazy --inspect-brk=9229 ./build/server.js",
+    "prod": "npm run build && npm run start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "@types/node": "^10.9.3",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "express-pino-logger": "^4.0.0",
+    "helmet": "^3.13.0",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.18.3",
+    "pg": "^7.4.3",
+    "pino": "^5.4.0",
+    "reflect-metadata": "^0.1.12",
+    "typeorm": "^0.2.7"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
+  }
+}
