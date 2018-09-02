@@ -5,11 +5,11 @@ const typeorm_1 = require("typeorm");
 let user_find;
 class UserController {
     /**
-     * @param  {express.Request} req
-     * @param  {express.Response} res
-     * @param  {express.NextFunction} next
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
      */
-    getUsers(req, res, next) {
+    getAll(req, res, next) {
         //console.log(req.app.get('config')) //getConfig
         typeorm_1.getConnection().getRepository(User_1.User)
             .find()
@@ -25,11 +25,19 @@ class UserController {
         });
     }
     /**
-     * @param  {express.Request} req
-     * @param  {express.Response} res
-     * @param  {express.NextFunction} next
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
      */
-    createUser(req, res, next) {
+    get(req, res, next) {
+        res.status(200).json(user_find);
+    }
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    create(req, res, next) {
         const user = new User_1.User();
         user.name = req.body.name;
         typeorm_1.getConnection().getRepository(User_1.User).save(user)
@@ -44,6 +52,49 @@ class UserController {
             next(error);
         });
     }
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    update(req, res, next) {
+        user_find.name = req.body.name;
+        typeorm_1.getConnection().getRepository(User_1.User).save(user_find)
+            .then((data) => {
+            res.status(200).json(data);
+        })
+            .catch((error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    delete(req, res, next) {
+        typeorm_1.getConnection().getRepository(User_1.User).delete(user_find)
+            .then(() => {
+            res.status(200).json({ message: "User delete !" });
+        })
+            .catch((error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     * @param  {nNumber} id
+     */
     userId(req, res, next, id) {
         typeorm_1.getConnection().getRepository(User_1.User).findOne({ id: id })
             .then((user) => {

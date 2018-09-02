@@ -1,4 +1,4 @@
-import * as express from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {User} from "../entity/User";
 import {getConnection} from "typeorm";
 
@@ -7,11 +7,11 @@ let user_find : User;
 class UserController{
 
     /**
-     * @param  {express.Request} req
-     * @param  {express.Response} res
-     * @param  {express.NextFunction} next
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
      */
-    public getUsers(req: express.Request, res: express.Response, next: express.NextFunction): void {
+    public getAll(req: Request, res: Response, next: NextFunction): void {
 
         //console.log(req.app.get('config')) //getConfig
 
@@ -31,11 +31,21 @@ class UserController{
     }
 
     /**
-     * @param  {express.Request} req
-     * @param  {express.Response} res
-     * @param  {express.NextFunction} next
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
      */
-    public createUser(req: express.Request, res: express.Response, next: express.NextFunction): void {
+    public get(req: Request, res: Response, next: NextFunction): void {
+        
+        res.status(200).json(user_find);
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public create(req: Request, res: Response, next: NextFunction): void {
 
         const user = new User();
         user.name = req.body.name;
@@ -53,7 +63,55 @@ class UserController{
         });
     }
 
-    userId(req: express.Request, res: express.Response, next: express.NextFunction, id: number): void {
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public update(req: Request, res: Response, next: NextFunction): void {
+
+        user_find.name = req.body.name;
+
+        getConnection().getRepository(User).save(user_find)            
+        .then((data) => {
+            res.status(200).json(data);
+        })
+        .catch((error: Error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public delete(req: Request, res: Response, next: NextFunction): void {
+
+        getConnection().getRepository(User).delete(user_find)            
+        .then(() => {
+            res.status(200).json({message : "User delete !"});
+        })
+        .catch((error: Error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     * @param  {nNumber} id
+     */
+    userId(req: Request, res: Response, next: NextFunction, id: number): void {
 
         getConnection().getRepository(User).findOne({id: id})
             .then((user) => {

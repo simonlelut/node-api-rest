@@ -6,10 +6,13 @@ import UserController from '../../controllers/User';
 */
 export default express()
 
-    .post('/', UserController.createUser)
+    .get('/', UserController.getAll)
+    .get('/:userId', UserController.get)
+    .post('/', UserController.create)
+    .put('/:userId', UserController.update)
+    .delete('/:userId', UserController.delete)
 
-    .get('/', UserController.getUsers)
-
+    
 
 
     .param("userId", UserController.userId)
