@@ -1,0 +1,30 @@
+module.exports = {
+  // more http://pm2.keymetrics.io/docs/usage/environment/
+  apps : [{
+    name      : 'server',
+    script    : './app/server.ts',
+    instances : 4,
+    exec_mode : "cluster",
+    watch     : "true",
+    env: {
+      NODE_ENV: 'production'
+    }
+  }],
+
+  // more http://pm2.keymetrics.io/docs/usage/deployment/
+  deploy : {
+    production : {
+      user : 'node',
+      // Multi host is possible, just by passing IPs/hostname as an array
+      host : ["212.83.163.1", "212.83.163.2", "212.83.163.3"],
+      // Branch
+      ref  : 'origin/master',
+      // Git repository to clone
+      repo : 'git@github.com:simonlelut/node-api-rest.git',
+      // Path of the application on target servers
+      path : '/',
+      // Commands to be executed on the server after the repo has been cloned
+      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js'
+    }
+  }
+};
