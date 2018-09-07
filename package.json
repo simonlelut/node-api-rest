@@ -9,7 +9,7 @@
   "keywords": ["yeoman-generator", "nodejs", "api", "rest", "typescript", "simple", "express","postgresql"],
   "scripts": {
     "build": "tsc",
-    "start": "tsc && nodemon ./build/server.js",
+    "start": "tsc && nodemon",
     "test": "mocha --require ts-node/register tests/**/*.ts",
     "prod": "npm run build && npm run start"
   },
