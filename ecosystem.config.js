@@ -13,19 +13,18 @@ module.exports = {
   deploy : {
     production : {
       
-      key: "/root/.ssh/newKey_private.perm",
+      key: "C:\Users\GANON\.ssh\keyDebainPri.ppk",
 
-      user : 'simon',
+      user : 'root',
       // Multi host is possible, just by passing IPs/hostname as an array
-      host : ["192.168.1.68"],
+      host : ["51.38.49.215"],
 
-      ssh_options: "StrictHostKeyChecking=no",
       // Branch
       ref  : 'origin/master',
       // Git repository to clone
-      repo : 'git@github.com:simonlelut/node-api-rest.git',
+      repo : 'https://github.com/simonlelut/node-api-rest.git',
       // Path of the application on target servers
-      path : '/var/www/myapp',
+      path : '/var/www/api',
       // Commands to be executed on the server after the repo has been cloned
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js'
     }
