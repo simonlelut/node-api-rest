@@ -24,6 +24,7 @@ module.exports = {
       repo : 'https://github.com/simonlelut/node-api-rest.git',
       // Path of the application on target servers
       path : '~/var/www/api',
+      
       // Commands to be executed on the server after the repo has been cloned
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js'
     }
