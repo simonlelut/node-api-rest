@@ -14,7 +14,6 @@ module.exports = {
     production : {
       
       key: "C:/Users/GANON/.ssh/keyDebainPri.ppk",
-
       user : 'root',
       // Multi host is possible, just by passing IPs/hostname as an array
       host : ["51.38.49.215"],
