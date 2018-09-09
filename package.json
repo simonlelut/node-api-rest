@@ -20,7 +20,7 @@
     "dev": "tsc && nodemon",
     "test": "mocha --require ts-node/register tests/**/*.ts",
     "prod": "pm2 start ecosystem.config.js",
-    "swagger" : "swagger project edit"
+    "swagger": "swagger project edit"
   },
   "author": {
     "name": "Lelut Simon",
@@ -42,7 +42,9 @@
     "nodemon": "^1.18.3",
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
-    "typeorm": "^0.2.7"
+    "swagger-ui-express": "^4.0.1",
+    "typeorm": "^0.2.7",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",

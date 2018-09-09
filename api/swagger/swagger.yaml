@@ -21,8 +21,6 @@ paths:
           description: A list of users.
           schema:
             type: array
-            items:
-              
             
 type: object
 required:
