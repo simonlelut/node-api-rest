@@ -25,6 +25,9 @@ const app: express.Express = express();
 app.set('port', port);
 app.set("config",config)
 
+//for swagger
+app.use(express.static("public"));
+
 // middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -47,6 +50,9 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
     next();
 });
+
+
+
 
 //Routes
 app.use(router);

@@ -2,8 +2,6 @@
     "compilerOptions": {
         "outDir": "./build/",
         "module": "commonjs",
-        "pretty": true,
-        "sourceMap": true,
         "target": "es6",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

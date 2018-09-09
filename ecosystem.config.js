@@ -4,8 +4,6 @@ module.exports = {
     name      : 'server',
     script    : './app/server.ts',
     instances : 4,
-    exec_mode : "cluster",
-    watch     : "true",
     env: {
       NODE_ENV: 'production'
     }

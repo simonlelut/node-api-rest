@@ -6,12 +6,20 @@
   "files": [
     "generators"
   ],
-  "keywords": ["yeoman-generator", "nodejs", "api", "rest", "typescript", "simple", "express","postgresql"],
+  "keywords": [
+    "yeoman-generator",
+    "nodejs",
+    "api",
+    "rest",
+    "typescript",
+    "simple",
+    "express",
+    "postgresql"
+  ],
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && nodemon",
+    "dev": "tsc && nodemon",
     "test": "mocha --require ts-node/register tests/**/*.ts",
-    "prod": "npm run build && npm run start"
+    "prod": "pm2 start ecosystem.config.js"
   },
   "author": {
     "name": "Lelut Simon",
