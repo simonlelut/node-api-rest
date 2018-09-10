@@ -17,8 +17,8 @@
       "ref"  : "origin/master",
       "repo" : "https://github.com/simonlelut/node-api-rest.git",
       "ssh_options": "StrictHostKeyChecking=no",
-      "path" : "/var/www/api",
-      "after-deploy" : "npm install"
+      "path" : "/var/www/node-api-rest",
+      "post-deploy" : "yarn install && pm2 startOrRestart ecosystem.json"
     }
   }
 }
