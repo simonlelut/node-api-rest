@@ -11,14 +11,14 @@
   "deploy" : {
     "production" : {
       
-      "key": "C:/Users/GANON/.ssh/keyDebainPri.ppk",
+      "key": "C:/Users/GANON/.ssh/key.pem",
       "user" : "root",
       "host" : ["51.38.49.215"],
       "ref"  : "origin/master",
       "repo" : "https://github.com/simonlelut/node-api-rest.git",
       "ssh_options": "StrictHostKeyChecking=no",
       "path" : "/var/www/api",
-      "post-deploy" : "npm install && pm2 startOrRestart ecosystem.config.json"
+      "after-deploy" : "npm install"
     }
   }
 }
