@@ -31,7 +31,7 @@ app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
 app.use(cors());
-app.use(morgan('tiny'));
+app.use(morgan('combined'));
 
 // cors
 app.use((req, res, next) => {
