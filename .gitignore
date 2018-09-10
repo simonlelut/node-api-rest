@@ -20,3 +20,4 @@ npm-debug.log
 config/config.json
 build
 yarn.lock
+package-json.lock
