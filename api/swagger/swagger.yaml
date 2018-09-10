@@ -14,15 +14,18 @@ produces:
   - application/json
 
 definitions:
-  UserBody:
+  User:
     type: object
     title: Users
     required:
       - name
     properties:
+      id: 
+        type: number
+        description: Id of user
       name:
         type: string
-        description: Name of users
+        description: Name of user
 paths:
   /:
     get:
@@ -42,7 +45,7 @@ paths:
           description: name
           required: true
           schema: 
-            $ref: "#/definitions/UserBody"
+            $ref: "#/definitions/User"
       responses:
         201:
           description: Returns User
@@ -77,7 +80,7 @@ paths:
           description: name
           required: true
           schema:
-            $ref: "#/definitions/UserBody"
+            $ref: "#/definitions/User"
       responses:
         200:
           description: Returns String
@@ -97,4 +100,4 @@ paths:
         200:
           description: Returns String
         404:
-          description: Don't know any user with this _id
+          description: Don't know any user with this id
