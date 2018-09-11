@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "dev": "tsc && nodemon",
-    "test": "mocha --require ts-node/register tests/**/*.ts",
+    "test": "SET NODE_ENV=dev && mocha --require ts-node/register tests/**/*.ts ",
     "prod": "pm2 start ecosystem.config.json",
     "swagger": "swagger project edit"
   },
@@ -33,6 +33,7 @@
     "@types/express": "^4.16.0",
     "@types/node": "^10.9.3",
     "body-parser": "^1.18.3",
+    "chai-http": "^4.2.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",

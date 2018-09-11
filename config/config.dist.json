@@ -2,12 +2,23 @@
     "databaseConfig" : {
         "type": "postgres",
         "host": "",
-        "port": 5433,
+        "port": 777,
         "username": "",
         "password": "",
         "database": "",
         "entities": ["app/entity/*.ts"],
-        "synchronize": true,
+        "synchronize": false,
         "logging" : true
+    },
+    "databaseTest" : {
+        "type": "",
+        "host": "",
+        "port": 777,
+        "username": "",
+        "password": "",
+        "database": "",
+        "entities": ["app/entity/*.ts"],
+        "synchronize": false,
+        "logging" : false
     } 
 }
