@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test';
 
 import {User} from "../app/entity/User";
 import {getConnection} from "typeorm";
-import { Application } from "../app/util/application";
+import { Application } from "../app/server";
 
 //Require the dev-dependencies
 let chai = require('chai')
