@@ -1,7 +1,6 @@
 import * as debug from 'debug';
 import * as http from 'http';
 import * as express from 'express';
-import { Express, Request, Response, NextFunction } from "express";
 import router from '../routes/routes';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
@@ -10,7 +9,8 @@ import * as cors from 'cors';
 import * as helmet from 'helmet';
 import "reflect-metadata";
 import * as morgan from 'morgan';
-import {createConnection, Connection} from "typeorm";
+import {createConnection} from "typeorm";
+
 //get config
 const config = require("../../config/config.json");
 let dataseConfig = config.databaseConfig;
@@ -20,7 +20,7 @@ debug('ts-express:server');
 
 export class Application {
 
-    public static getApp(): Promise<Express | void> {
+    public static async getApp(): Promise<express.Express> {
         //variablesx
         const port:number = 3000;
         const app: express.Express = express();
@@ -62,24 +62,19 @@ export class Application {
 
         const server: http.Server = http.createServer(app);
 
-        //connection database
-        return createConnection(dataseConfig).then(async () => {
-
-            // server listen
-            await server.listen(port);
-            console.log(`Server running on port: ${port}`)
-
-            // here you can start to work with your entities
-            console.info("database connection set");
-            return app;
-            
-        }).catch(error => console.info(error));
-
-
         // server handlers
-        server.on(
-            'error',
-            (error) => console.error(error));
+        server.on('error', (error) => console.error(error));
+
+        //connection database
+        await createConnection(dataseConfig);
+         
+        console.info("database connection set");
+
+        // server listen
+        await server.listen(port);
+        console.log(`Server running on port: ${port}`);
+
+        return app;
     }
 }
 

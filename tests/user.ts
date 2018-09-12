@@ -19,12 +19,13 @@ describe('User', () => {
     let connection;
 
     beforeEach(done => { 
-
+        
         connection.getRepository(User).delete({});
         done();
     }); 
 
     before(done => { 
+        
         Application.getApp().then(async serv => { 
             server = serv;
             connection = await getConnection();
@@ -35,9 +36,9 @@ describe('User', () => {
     /*
     * Test the /GET route
     */
-    describe('/GET users', () => {
-    it('it should GET all the users', (done) => {
-        console.log()
+    describe('/get Users', () => {
+    it('it should get all the users', (done) => {
+        
         chai.request(server)
             .get('/users')
             .end((err, res) => {
@@ -45,6 +46,27 @@ describe('User', () => {
                 res.body.should.be.a('array');
                 res.body.length.should.be.eql(0);
             done();
+            });
+        });
+    });
+
+     describe('/get/:idUser', () => {
+        it('it should get a user by id', (done) => {
+
+            let user = new User();
+            user.name = "testUser";
+
+            connection.getRepository(User).save(user).then((user) => {
+                chai.request(server)
+                .get('/users/' + user.id)
+                .end((err, res) => {
+
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('name');
+                        res.body.should.have.property('id').eql(user.id);
+                    done();
+                });
             });
         });
     });
