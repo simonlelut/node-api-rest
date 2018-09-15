@@ -12,6 +12,17 @@ let should = chai.should();
 
 chai.use(chaiHttp);
 
+let config = {"databaseConfig" : {
+        "type": "postgres",
+        "host": "localhost",
+        "port": 5432,
+        "username": "postgres",
+        "password": "",
+        "database": "test",
+        "entities": ["app/entity/*.ts"],
+        "synchronize": false,
+        "logging" : false
+    } }
 
 //Our parent block
 describe('User', () => {
@@ -19,14 +30,13 @@ describe('User', () => {
     let connection;
 
     beforeEach(done => { 
-        
         connection.getRepository(User).delete({});
         done();
     }); 
 
     before(done => { 
         
-        Application.getApp().then(async serv => { 
+        Application.getApp(config).then(async serv => { 
             server = serv;
             connection = await getConnection();
             done();

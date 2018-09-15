@@ -11,16 +11,18 @@ import "reflect-metadata";
 import * as morgan from 'morgan';
 import {createConnection} from "typeorm";
 
-//get config
-const config = require("../config/config.json");
-let dataseConfig = config.databaseConfig;
+
 
 //for typescript
 debug('ts-express:server');
 
 export class Application {
 
-    public static async getApp(): Promise<express.Express> {
+    public static async getApp(config? : any): Promise<express.Express> {
+
+        //if no config set use default 
+        config ? config : require("../config/config.json");
+
         //variablesx
         const port:number = 3000;
         const app: express.Express = express();
@@ -37,11 +39,8 @@ export class Application {
         app.use(helmet());
         app.use(cors());
 
-        if(process.env.NODE_ENV === "test")
-            dataseConfig = config.databaseTest;
-        else
+        if(process.env.NODE_ENV !== "test")
             app.use(morgan('combined'));
-
 
         // cors
         app.use((req, res, next) => {
@@ -66,7 +65,7 @@ export class Application {
         server.on('error', (error) => console.error(error));
 
         //connection database
-        await createConnection(dataseConfig);
+        await createConnection(config.databaseConfig);
          
         console.info("database connection set");
 
