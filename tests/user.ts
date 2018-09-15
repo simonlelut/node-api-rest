@@ -20,7 +20,7 @@ let config = {"databaseConfig" : {
         "password": "",
         "database": "test",
         "entities": ["app/entity/*.ts"],
-        "synchronize": false,
+        "synchronize": true,
         "logging" : false
     } }
 
