@@ -18,6 +18,8 @@ debug('ts-express:server');
 
 export class Application {
 
+    static server: http.Server; 
+
     public static async getApp(config? : any): Promise<express.Express> {
 
         //if no config set use default 
@@ -59,10 +61,10 @@ export class Application {
         //Routes
         app.use(router);
 
-        const server: http.Server = http.createServer(app);
+        this.server= http.createServer(app);
 
         // server handlers
-        server.on('error', (error) => console.error(error));
+        this.server.on('error', (error) => console.error(error));
 
         //connection database
         await createConnection(config.databaseConfig);
@@ -70,11 +72,16 @@ export class Application {
         console.info("database connection set");
 
         // server listen
-        await server.listen(port);
+        await this.server.listen(port);
         console.log(`Server running on port: ${port}`);
 
         return app;
     }
+    
+    public static stop() {
+        this.server.close();
+    }
+      
 }
 
 if(process.env.NODE_ENV !== "test")

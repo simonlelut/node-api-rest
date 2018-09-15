@@ -43,6 +43,10 @@ describe('User', () => {
         }).catch(done);
     });
 
+    after(async () => {
+        Application.stop();
+    });
+
     /*
     * Test the /GET route
     */

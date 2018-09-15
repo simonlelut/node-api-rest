@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "dev": "tsc && nodemon",
-    "test": "mocha --require ts-node/register tests/**/*.ts ",
+    "test": "mocha --require ts-node/register tests/**/*.ts --exit",
     "prod": "pm2 start ecosystem.config.json",
     "swagger": "swagger project edit"
   },
