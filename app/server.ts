@@ -21,7 +21,7 @@ export class Application {
     public static async getApp(config? : any): Promise<express.Express> {
 
         //if no config set use default 
-        config ? config : require("../config/config.json");
+        config =  config ? config : require("../config/config.json");
 
         //variablesx
         const port:number = 3000;

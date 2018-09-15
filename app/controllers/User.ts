@@ -51,8 +51,8 @@ class UserController{
         user.name = req.body.name;
 
         getConnection().getRepository(User).save(user)            
-        .then((data) => {
-            res.status(200).json(data);
+        .then(() => {
+            res.status(200).json({"id":user.id, "name": user.name});
         })
         .catch((error: Error) => {
             res.status(500).json({
