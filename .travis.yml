@@ -15,4 +15,3 @@ before_install:
 - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ./deploy_key
 - ssh -i ./deploy_key root@51.38.49.215 pwd
-after_success: - pm2 deploy ecosystem.json production
