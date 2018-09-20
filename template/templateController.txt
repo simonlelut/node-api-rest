@@ -1,0 +1,134 @@
+import {Request, Response, NextFunction} from 'express';
+import { {{upercase}} } from "../entity/{{upercase}}";
+import {getConnection} from "typeorm";
+
+let {{lowercase}}_find : {{upercase}};
+
+class {{upercase}}Controller{
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public getAll(req: Request, res: Response, next: NextFunction): void {
+
+        getConnection().getRepository({{upercase}})           
+            .find()
+            .then((data) => {
+                res.status(200).json(data);
+            })
+            .catch((error: Error) => {
+                res.status(500).json({
+                    error: error.message,
+                    errorStack: error.stack
+                });
+                next(error);
+            });
+            
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public get(req: Request, res: Response, next: NextFunction): void {
+        
+        res.status(200).json({{lowercase}}_find);
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public create(req: Request, res: Response, next: NextFunction): void {
+
+        let {{lowercase}} = req.body;
+
+        getConnection().getRepository({{upercase}}).save({{lowercase}})            
+        .then(() => {
+            res.status(200).json({{lowercase}});
+        })
+        .catch((error: Error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public update(req: Request, res: Response, next: NextFunction): void {
+
+        {{lowercase}}_find = req.body;
+
+        getConnection().getRepository({{upercase}}).save({{lowercase}}_find)            
+        .then((data) => {
+            res.status(200).json(data);
+        })
+        .catch((error: Error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public delete(req: Request, res: Response, next: NextFunction): void {
+
+        getConnection().getRepository({{upercase}}).delete({{lowercase}}_find)            
+        .then(() => {
+            res.status(200).json({message : "{{upercase}} delete !"});
+        })
+        .catch((error: Error) => {
+            res.status(500).json({
+                error: error.message,
+                errorStack: error.stack
+            });
+            next(error);
+        });
+    }
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     * @param  {nNumber} id
+     */
+    {{lowercase}}Id(req: Request, res: Response, next: NextFunction, id: number): void {
+
+        getConnection().getRepository({{upercase}}).findOne({id: id})
+            .then(({{lowercase}}) => {
+
+                if(!{{lowercase}})
+                    return res.status(404).json("this {{upercase}} doesn't exist !");
+
+                {{lowercase}}_find  = {{lowercase}};
+                next();
+            })
+            .catch((error: Error) => {
+                res.status(500).json({
+                    error: error.message,
+                    errorStack: error.stack
+                });
+                res.status(404).json("this {{upercase}} doesn't exist !");
+                next(error);
+            });
+
+    }
+}
+
+export default new {{upercase}}Controller();
