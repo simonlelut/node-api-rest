@@ -21,3 +21,4 @@ config/config.json
 build
 yarn.lock
 package-json.lock
+deploy_key

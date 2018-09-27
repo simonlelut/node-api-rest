@@ -1,0 +1,16 @@
+import * as express from 'express';
+import {{upercase}}Controller from '../controllers/{{upercase}}';
+
+/*
+    /{{lowercase}}s
+*/
+export default express()
+
+    .get('/', {{upercase}}Controller.getAll)
+    .get('/:{{lowercase}}Id', {{upercase}}Controller.get)
+    .post('/', {{upercase}}Controller.create)
+    .put('/:{{lowercase}}Id', {{upercase}}Controller.update)
+    .delete('/:{{lowercase}}Id', {{upercase}}Controller.delete)
+    
+    .param("{{lowercase}}Id", {{upercase}}Controller.{{lowercase}}Id)
+

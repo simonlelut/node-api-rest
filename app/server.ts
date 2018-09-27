@@ -10,60 +10,80 @@ import helmet from 'helmet';
 import "reflect-metadata";
 import morgan from 'morgan';
 import {createConnection} from "typeorm";
-//get config
-const config = require("../config/config.json");
+
+
 
 //for typescript
 debug('ts-express:server');
 
-//variables
-const port:number = 3000;
-const app: express.Express = express();
+export class Application {
 
-//global variables
-app.set('port', port);
-app.set("config",config)
+    static server: http.Server; 
 
-// middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(compression());
-app.use(helmet());
-app.use(cors());
-app.use(morgan('combined'));
+    public static async getApp(config? : any): Promise<express.Express> {
 
-// cors
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With,' +
-        ' Content-Type, Accept,' +
-        ' Authorization,' +
-        ' Access-Control-Allow-Credentials'
-    );
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-});
+        //if no config set use default 
+        config =  config ? config : require("../config/config.json");
 
-//Routes
-app.use(router);
+        //variablesx
+        const port:number = 3000;
+        const app: express.Express = express();
 
-const server: http.Server = http.createServer(app);
+        //global variables
+        app.set('port', port);
+        app.set("config",config)
 
-// server listen
-server.listen(port);
+        // middleware
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(bodyParser.json());
+        app.use(cookieParser());
+        app.use(compression());
+        app.use(helmet());
+        app.use(cors());
 
-//connection database
-createConnection(config.databaseConfig).then(connection => {
-    // here you can start to work with your entities
-    console.info(`Server listening on port ${port}`);
-    console.info("database connection set");
-}).catch(error => console.info(error));
+        if(process.env.NODE_ENV !== "test")
+            app.use(morgan('combined'));
 
+        // cors
+        app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
+            res.header(
+                'Access-Control-Allow-Headers',
+                'Origin, X-Requested-With,' +
+                ' Content-Type, Accept,' +
+                ' Authorization,' +
+                ' Access-Control-Allow-Credentials'
+            );
+            res.header('Access-Control-Allow-Credentials', 'true');
+            next();
+        });
 
-// server handlers
-server.on(
-    'error',
-    (error) => console.error(error));
+        //Routes
+        app.use(router);
+
+        this.server= http.createServer(app);
+
+        // server handlers
+        this.server.on('error', (error) => console.error(error));
+
+        //connection database
+        await createConnection(config.databaseConfig);
+         
+        console.info("database connection set");
+
+        // server listen
+        await this.server.listen(port);
+        console.log(`Server running on port: ${port}`);
+
+        return app;
+    }
+    
+    public static stop() {
+        this.server.close();
+    }
+      
+}
+
+if(process.env.NODE_ENV !== "test")
+    Application.getApp();
+    
