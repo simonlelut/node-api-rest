@@ -1,14 +1,14 @@
-import * as debug from 'debug';
-import * as http from 'http';
-import * as express from 'express';
+import debug from 'debug';
+import http from 'http';
+import express from 'express';
 import router from './routes/routes';
-import * as bodyParser from 'body-parser';
-import * as compression from 'compression';
-import * as cookieParser from 'cookie-parser';
-import * as cors from 'cors';
-import * as helmet from 'helmet';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import helmet from 'helmet';
 import "reflect-metadata";
-import * as morgan from 'morgan';
+import morgan from 'morgan';
 import {createConnection} from "typeorm";
 //get config
 const config = require("../config/config.json");

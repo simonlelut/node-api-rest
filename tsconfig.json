@@ -9,7 +9,9 @@
             {
               "name": "tslint-language-service"
             }
-          ]
+        ],
+        "strict": true,
+        "esModuleInterop": true
     },
     "include": [
         "./app/**/*.ts"

@@ -1,11 +1,11 @@
-import * as express from 'express';
+import express from 'express';
 import UserRouter from './users/UserRouter'
 
 const router = express();
 
 //for swagger
-import * as swaggerUi from 'swagger-ui-express';
-import * as YAML from "yamljs";
+import swaggerUi from 'swagger-ui-express';
+import YAML from "yamljs";
 const swaggerDocument = YAML.load('api/swagger/swagger.yaml');
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDocument));

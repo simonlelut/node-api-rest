@@ -4,10 +4,10 @@ import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 export class User {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({
         length: 100
     })
-    name: string;
+    name!: string;
 }
