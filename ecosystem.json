@@ -15,7 +15,7 @@
       "user" : "root",
       "host" : ["51.38.49.215"],
       "ref"  : "origin/master",
-      "repo" : "https://github.com/simonlelut/node-api-rest.git",
+      "repo" : "git@github.com:simonlelut/node-api-rest.git",
       "ssh_options": "StrictHostKeyChecking=no",
       "path" : "/var/www/node-api-rest",
       "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json"
