@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: 1.0.0
   title: User api
-  description: Nice API
+  description: Nice API / test deploy
 basePath: /users
 tags:
   - name: Users
