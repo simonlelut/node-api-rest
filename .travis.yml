@@ -28,4 +28,5 @@ after_success:
 - git config --global user.email "simon.lelut@gmail.com"
 - git config --global user.name "simonlelut"
 - npm i pm2 -g
+- pm2 deploy ecosystem.json production setup
 - pm2 deploy ecosystem.json production
