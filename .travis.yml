@@ -1,6 +1,7 @@
 language: node_js
 node_js:
 - '10'
+sudo: required
 services: postgresql
 addons:
   ssh_known_hosts:
