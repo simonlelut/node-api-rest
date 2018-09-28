@@ -22,3 +22,4 @@ build
 yarn.lock
 package-lock.json
 deploy_key
+key.pem
