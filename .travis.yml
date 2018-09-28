@@ -14,7 +14,7 @@ before_install:
 - chmod 600 ./deploy_key
 - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - ssh-add ./deploy_key
-- ssh -i ./deploy_key root@51.38.49.215 pwd
+- ssh -i ./deploy_key root@51.38.49.215 pwd -o StrictHostKeyChecking=no
 after_success:
 - ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
 - pm2 deploy ecosystem.json production
