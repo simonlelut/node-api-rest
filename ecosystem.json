@@ -2,7 +2,6 @@
   "apps" : [{
     "name"      : "server",
     "script"    : "./app/server.ts",
-    "instances" : 4,
     "env": {
       "NODE_ENV": "production"
     }
