@@ -1,8 +1,6 @@
 language: node_js
 node_js:
 - '10'
-dist: trusty
-sudo: required
 services: postgresql
 addons:
   ssh_known_hosts:
@@ -16,6 +14,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_7382dfd1c392_key -iv $encrypted_7382dfd1c392_iv
   -in encryptFiles.tar.enc -out encryptFiles.tar -d
 - tar xvf encryptFiles.tar
+- eval "$(ssh-agent -s)"
 - chmod 600 ./deploy_key
 - ssh-add ./deploy_key
 - ssh -i ./deploy_key root@51.38.49.215 pwd
