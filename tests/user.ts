@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 let config = {"databaseConfig" : {
         "type": "postgres",
         "host": "localhost",
-        "port": 5432,
+        "port": 5433,
         "username": "postgres",
         "password": "",
         "database": "test",

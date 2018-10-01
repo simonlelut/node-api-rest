@@ -18,7 +18,6 @@ before_install:
 - chmod 600 ./deploy_key
 - ssh-add ./deploy_key
 - ssh -i ./deploy_key root@51.38.49.215 pwd
-
 after_success:
 - ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
 - npm i pm2 -g
