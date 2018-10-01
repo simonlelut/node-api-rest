@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "tsc && nodemon",
     "test": "mocha --require ts-node/register tests/**/*.ts --exit",
-    "deploy": "pm2 deploy ecosystem.json production",
+    "deploy": "pm2 deploy ecosystem.json production setup && pm2 deploy ecosystem.json production",
     "swagger": "swagger project edit"
   },
   "author": {
