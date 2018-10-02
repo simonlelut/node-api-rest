@@ -11,12 +11,6 @@ class UserController{
 
     private userFind : User;
 
-    private defaultRange = 5;
-
-    private defaultStart = 0;
-
-    private acceptRange = 50;
-
     private getUser = (user : User) => {
         return {
             "id"    : user.id,
@@ -39,40 +33,23 @@ class UserController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
 
-        //console.log(req.app.get('config')) //getConfig
-        let query = null;
+        let query: any = await util.getQuery(req.query.range, res,req, User);
 
-        let countAll = await getConnection().getRepository(User).count();
-
-        res.setHeader("Accept-Range", `${this.acceptRange}`);
-
-        try{
-            if(req.query.range)
-                query = util.getQuery(req.query.range, this.acceptRange, res, countAll);
-        }
-        catch(error){
-            return next(error);
-        };
-
+        if(query.error)
+            return ;
         
-        let start: number = query ? query.start : this.defaultStart;
-        let range: number = query ? query.range : this.defaultRange;
-        let end : number = query ? query.end : this.acceptRange;
-
         getConnection().getRepository(User)           
             .find({
-                skip : start,
-                take : range
+                skip : query.start,
+                take : query.range
             })
             .then((data) => {
 
-                if(range >= countAll)
+                if(query.range >= query.countAll)
                     res.status(200).json(this.getUsers(data));
                 else{
-
                     //set header for pagination
-                    if (query)
-                        util.setPagination(end,start, range,countAll,req,res)
+                    util.setPagination(query, req, res)
 
                     //result a part of users
                     res.status(206).json(this.getUsers(data));
