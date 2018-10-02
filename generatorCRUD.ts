@@ -1,6 +1,6 @@
-import * as fse from 'fs-extra'
-import * as Handlebars from 'handlebars';
-import * as validator from 'validator';
+import fse from 'fs-extra'
+import Handlebars from 'handlebars';
+import validator from 'validator';
 
 // constants
 const dirController = "./app/controllers/";
