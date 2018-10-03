@@ -1,51 +1,22 @@
 process.env.NODE_ENV = 'test';
 
-
-
 import {User} from "../app/entity/User";
 import {getConnection} from "typeorm";
 import { Application } from "../app/server";
 import faker from 'faker';
 
-import { suite, test, slow, timeout } from "mocha-typescript";
-import { assert } from "chai";
-
-// sets locale to fr
+// setup tests
 faker.locale = "fr";
-
-//Require the dev-dependencies
-let chai = require('chai')
-, chaiHttp = require('chai-http');
-
-let should = chai.should();
-
+let chai = require('chai'), 
+chaiHttp = require('chai-http');
+chai.should();
 chai.use(chaiHttp);
-
-
-
-let config = {
-
-    "databaseConfig" : {
-        "type": "postgres",
-        "host": "localhost",
-        "port": 5432,
-        "username": "postgres",
-        "password": "",
-        "database": "test",
-        "entities": ["app/entity/*.ts"],
-        "synchronize": true,
-        "logging" : false
-    },
-    "uri" : "http://localhost:3000",
-    "defaultPaginationRange": 20,
-    "maxRangePagination"    : 50
- }
-
+let config = require("../config/config.dist.json");
 let server;
 let connection;
 
 before(async () => { 
-        
+
     await Application.getApp(config).then(async serv => { 
         server = serv;
         connection = await getConnection();

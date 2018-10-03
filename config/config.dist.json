@@ -11,14 +11,17 @@
         "logging" : true
     },
     "databaseTest" : {
-        "type": "",
-        "host": "",
-        "port": 777,
-        "username": "",
+        "type": "postgres",
+        "host": "localhost",
+        "port": 5433,
+        "username": "postgres",
         "password": "",
-        "database": "",
+        "database": "test",
         "entities": ["app/entity/*.ts"],
-        "synchronize": false,
+        "synchronize": true,
         "logging" : false
-    } 
+    },
+    "uri" : "http://localhost:3000",
+    "defaultPaginationRange": 20,
+    "maxRangePagination"    : 50
 }
