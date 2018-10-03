@@ -53,8 +53,7 @@ class Util{
         if(start != 0)
             header += `<${uri}?range=0-${range}>; rel="first",`; 
 
-        //si on 
-        if(start > 0 && start - range != 0)
+        if(start > 0 && start - range > 0)
             header += `<${uri}?range=${start - range}-${start}>; rel="prev",`;
         
         if( range * 2 < countAll && end < countAll){

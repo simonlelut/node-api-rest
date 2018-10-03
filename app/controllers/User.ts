@@ -45,7 +45,7 @@ class UserController{
             })
             .then((data) => {
 
-                if(query.range >= query.countAll)
+                if(data.length == query.countAll)
                     res.status(200).json(this.getUsers(data));
                 else{
                     //set header for pagination

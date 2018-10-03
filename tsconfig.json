@@ -5,6 +5,7 @@
         "target": "es6",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
+        "allowJs": true,
         "plugins": [
             {
               "name": "tslint-language-service"

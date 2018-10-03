@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "dev": "tsc && nodemon",
-    "test": "mocha --require ts-node/register tests/**/*.ts --exit",
+    "test": "mocha --require ts-node/register test/main.ts --exit",
     "deploy": "pm2 deploy ecosystem.json production",
     "swagger": "swagger project edit"
   },
@@ -54,7 +54,6 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "faker": "^4.1.0",
     "@types/chai": "^4.1.6",
     "@types/compression": "0.0.36",
     "@types/cookie-parser": "^1.4.1",
@@ -68,8 +67,11 @@
     "@types/yamljs": "^0.2.30",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
+    "faker": "^4.1.0",
     "handlebars": "^4.0.12",
     "mocha": "^5.2.0",
+    "mocha-typescript": "^1.1.17",
+    "nyc": "^13.0.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.1.1"
