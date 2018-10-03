@@ -26,7 +26,7 @@ class Util{
                 result.start >= result.end){
 
                 res.status(400).json({reason : "Requested range not allowed"});
-                return {error : "Requested range not allowed"};
+                return;
             }
         }
         else {

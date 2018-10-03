@@ -41,6 +41,14 @@ export class Application {
         app.use(helmet());
         app.use(cors());
 
+        
+
+        if(process.env.NODE_ENV !== "test"){
+            app.use(morgan('combined'));
+            await createConnection(config.databaseConfig);
+        } else
+            await createConnection(config.databaseTest);    
+
         // cors
         app.use((req, res, next) => {
             res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS ');
@@ -63,13 +71,10 @@ export class Application {
         // server handlers
         this.server.on('error', (error) => console.error(error));
 
-        if(process.env.NODE_ENV !== "test"){
-            app.use(morgan('combined'));
-            await createConnection(config.databaseConfig);
-        }
-        else
-            await createConnection(config.databaseTest);    
-            
+        
+        
+           
+        
          
         console.info("database connection set");
 

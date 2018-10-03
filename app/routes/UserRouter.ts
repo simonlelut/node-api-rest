@@ -7,7 +7,6 @@ import {getConnection} from "typeorm";
 /*
     /users
 */
-
 const addUsers = async (number) => {
     for(let i = 0; i < number; i++){
             

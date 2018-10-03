@@ -32,10 +32,10 @@ class UserController{
      * @param  {NextFunction} next
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
-
+        
         let query: any = await util.getQuery(req.query.range, res,req, User);
-
-        if(query.error)
+        
+        if(!query)
             return ;
         
         getConnection().getRepository(User)           
@@ -56,10 +56,6 @@ class UserController{
                 }
             })
             .catch((error: Error) => {
-                res.status(500).json({
-                    error: error.message,
-                    errorStack: error.stack
-                });
                 next(error);
             });
         
@@ -90,10 +86,6 @@ class UserController{
             res.status(201).json(this.getUser(user));
         })
         .catch((error: Error) => {
-            res.status(500).json({
-                error: error.message,
-                errorStack: error.stack
-            });
             next(error);
         });
     }
@@ -112,10 +104,6 @@ class UserController{
             res.status(200).json(this.getUser(data));
         })
         .catch((error: Error) => {
-            res.status(500).json({
-                error: error.message,
-                errorStack: error.stack
-            });
             next(error);
         });
     }
@@ -134,10 +122,6 @@ class UserController{
             res.status(200).json(this.getUser(data));
         })
         .catch((error: Error) => {
-            res.status(500).json({
-                error: error.message,
-                errorStack: error.stack
-            });
             next(error);
         });
     }
@@ -154,10 +138,6 @@ class UserController{
             res.status(200).json({message : "User delete !"});
         })
         .catch((error: Error) => {
-            res.status(500).json({
-                error: error.message,
-                errorStack: error.stack
-            });
             next(error);
         });
     }
@@ -180,11 +160,6 @@ class UserController{
                 next();
             })
             .catch((error: Error) => {
-                res.status(500).json({
-                    error: error.message,
-                    errorStack: error.stack
-                });
-                res.status(404).json("this User doesn't exist !");
                 next(error);
             });
 
