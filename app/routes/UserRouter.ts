@@ -1,9 +1,11 @@
+import { querySchemaGeneric } from './../util/schema';
 import express from 'express';
 import UserController from '../controllers/User';
 import {User} from "../entity/User";
 import faker from 'faker';
 import {getConnection} from "typeorm";
-
+import Joi from 'joi';
+const validator = require('express-joi-validation')({passError: true})
 
 /*
     /users
@@ -13,13 +15,25 @@ const addUsers = async (number) => {
     for(let i = 0; i < number; i++){
         let user = new User();
         user.name = faker.name.findName();
+        user.username = faker.name.findName();
         users.push(user);
     }
     await getConnection().getRepository(User).save(users)
 }
+
+const querySchema = querySchemaGeneric.keys({
+    name: Joi
+        .string()
+        .regex(/\b[^\d\W]+\b/),
+    username: Joi
+        .string()
+        .regex(/\b[^\d\W]+\b/),
+        
+})
+
 export default express()
 
-    .get('/', UserController.getAll)
+    .get('/', validator.query(querySchema),UserController.getAll)
     .get('/:userId', UserController.get)
     .post('/', UserController.create)
     .patch('/:userId', UserController.patch)
@@ -33,8 +47,7 @@ export default express()
         
     })
     .get('/test/delete', async (req,res) =>{
-        console.log("test")
-        await getConnection().getRepository(User).delete({});
+        await getConnection().getRepository(User).query(`TRUNCATE TABLE "user" RESTART IDENTITY;`)
         res.status(200).json({message : `delete all users`});
     })
 

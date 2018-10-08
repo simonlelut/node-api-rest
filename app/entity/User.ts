@@ -10,4 +10,12 @@ export class User {
         length: 100
     })
     name!: string;
+
+    @Column({
+        length: 100,
+        nullable: true
+    })
+    username!: string;
+
+    static filters : string[] = ["name","username"];
 }

@@ -1,23 +1,27 @@
 import {Request, Response} from 'express';
 import {getConnection} from "typeorm";
+import async from 'async';
 
 class Util{
 
 
-    public getQuery = async (query: string, res: Response, req: Request, classe: any)=>{
+    public getQuery = async (query: Request["query"], res: Response, req: Request, classe: any)=>{
+
+        
 
         res.setHeader("Accept-Range", `${req.app.get('config').maxRangePagination}`);
         
         let result: any = {}, queries: string[]
 
-        //TODO: test query
-        if(query){
+        if(query.range){
 
-            queries= query.split("-");
+            queries= query.range.split("-");
             result.start = Number(queries[0]);
             result.end = Number(queries[1]);
 
             result.range = result.end - result.start;
+
+            delete query.range;
 
             if(result.start === undefined || 
                 result.end === undefined || 
@@ -35,7 +39,30 @@ class Util{
             result.range    = req.app.get('config').defaultPaginationRange;
         }
 
-        result.countAll = await getConnection().getRepository(classe).count();
+        //tri, 
+        if(query.sort){
+            result.sort = query.sort.split(",")
+            
+            let order = [];
+            for(let i = 0; i < result.sort.length; i++){
+                //si query.sort et query.desc alors descendant, sinon ascendant
+                if(query.desc && query.desc.includes(result.sort[i]))
+                    order[result.sort[i]] = "DESC"
+                else
+                    order[result.sort[i]] = "ASC"
+            }
+            result.order = order;
+            delete query.sort;
+            delete query.desc;
+        }
+        else
+            result.sort = ""
+
+        if(query !== {}){
+           result.filter = query;
+        }
+
+        result.countAll = await getConnection().getRepository(classe).count(result.filter);
         res.setHeader("Content-Range", `${result.start}-${result.end}/${result.countAll}`);
 
         return result;

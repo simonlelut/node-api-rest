@@ -12,10 +12,15 @@ class UserController{
     private userFind : User;
 
     private getUser = (user : User) => {
-        return {
+        let data = {
             "id"    : user.id,
-            "name"  : user.name
-        }
+            "name"  : user.name,
+            "username": user.username
+        };
+        if(data.username === null)
+            delete data.username;
+
+        return data
     }
 
     private getUsers = (users) => {
@@ -33,19 +38,21 @@ class UserController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
         
-        let query: any = await util.getQuery(req.query.range, res,req, User);
+        let query: any = await util.getQuery(req.query, res,req, User);
         
         if(!query)
             return ;
         
         getConnection().getRepository(User)           
             .find({
+                where: query.filter,
+                order: query.order,
                 skip : query.start,
                 take : query.range
             })
             .then((data) => {
 
-                if(data.length == query.countAll)
+                if(data.length === query.countAll)
                     res.status(200).json(this.getUsers(data));
                 else{
                     //set header for pagination
