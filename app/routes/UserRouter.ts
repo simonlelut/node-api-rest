@@ -4,16 +4,18 @@ import {User} from "../entity/User";
 import faker from 'faker';
 import {getConnection} from "typeorm";
 
+
 /*
     /users
 */
 const addUsers = async (number) => {
+    let users: User[] = [];
     for(let i = 0; i < number; i++){
-            
         let user = new User();
         user.name = faker.name.findName();
-        await getConnection().getRepository(User).save(user).then();
+        users.push(user);
     }
+    await getConnection().getRepository(User).save(users)
 }
 export default express()
 
@@ -28,5 +30,11 @@ export default express()
     .get('/populate/:nbPopulate', async (req,res) =>{
         await addUsers(req.params.nbPopulate);
         res.status(200).json({message : `add ${req.params.nbPopulate} users`});
+        
+    })
+    .get('/test/delete', async (req,res) =>{
+        console.log("test")
+        await getConnection().getRepository(User).delete({});
+        res.status(200).json({message : `delete all users`});
     })
 

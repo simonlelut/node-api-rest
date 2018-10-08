@@ -10,8 +10,7 @@ import helmet from 'helmet';
 import "reflect-metadata";
 import morgan from 'morgan';
 import {createConnection} from "typeorm";
-
-
+import responseTime  from "response-time";
 
 //for typescript
 debug('ts-express:server');
@@ -40,14 +39,21 @@ export class Application {
         app.use(compression());
         app.use(helmet());
         app.use(cors());
-
-        
+        app.use(responseTime())
 
         if(process.env.NODE_ENV !== "test"){
             app.use(morgan('combined'));
-            await createConnection(config.databaseConfig);
+            await createConnection(config.databaseConfig)
+            .catch(e =>{
+                console.log(e);
+                process.exit(1);
+            });
         } else
-            await createConnection(config.databaseTest);    
+            await createConnection(config.databaseTest)
+            .catch(e =>{
+                console.log(e);
+                process.exit(1);
+            });    
 
         // cors
         app.use((req, res, next) => {
@@ -70,11 +76,6 @@ export class Application {
 
         // server handlers
         this.server.on('error', (error) => console.error(error));
-
-        
-        
-           
-        
          
         console.info("database connection set");
 
@@ -88,7 +89,6 @@ export class Application {
     public static stop() {
         this.server.close();
     }
-      
 }
 
 if(process.env.NODE_ENV !== "test")
