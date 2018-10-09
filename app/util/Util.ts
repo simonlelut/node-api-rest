@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {getConnection} from "typeorm";
+import {getConnection, Like} from "typeorm";
 import async from 'async';
 
 class Util{
@@ -59,21 +59,42 @@ class Util{
             result.sort = ""
 
         if(query !== {}){
-           result.filter = query;
+            
+            result.filter = Object.keys(query);
+            let keys = Object.keys(query).map(i => query[i]);
+            
+            let filters = [];
+            for(let i = 0; i < result.filter.length; i++){
+                filters[result.filter[i]] = Like(`${keys[i]}`)
+            }
+
+            result.filter = Object.assign({}, filters);
         }
 
-        result.countAll = await getConnection().getRepository(classe).count(result.filter);
+        let data = await getConnection().getRepository(classe)           
+            .findAndCount({
+                where: result.filter,
+                order: result.order,
+                skip : result.start,
+                take : result.range
+            });
+
+        result.countAll = data[1]
+
         res.setHeader("Content-Range", `${result.start}-${result.end}/${result.countAll}`);
 
-        return result;
+        return {
+            query: result,
+            results: data[0]
+        }
     }
 
     public setPagination = (query: any, req: Request, res : Response) => {
 
         let start = query.start;
         let range = query.range;
-        let countAll = query.countAll;
         let end = query.end;
+        let countAll = query.countAll;
         let uri = req.app.get('config').uri + "/users";
         let header: string = "";
 

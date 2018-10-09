@@ -1,7 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import {User} from "../entity/User";
-import {getConnection} from "typeorm";
-import async from "async";
+import {getConnection, Like} from "typeorm";
 import util from "../util/Util";
 
 /**
@@ -10,27 +9,7 @@ import util from "../util/Util";
 class UserController{
 
     private userFind : User;
-
-    private getUser = (user : User) => {
-        let data = {
-            "id"    : user.id,
-            "name"  : user.name,
-            "username": user.username
-        };
-        if(data.username === null)
-            delete data.username;
-
-        return data
-    }
-
-    private getUsers = (users) => {
-        let result = [];
-        async.forEachOf(users, (user)=>{
-            result.push(this.getUser(user as User))
-        })
-        return result;
-    }
-
+    
     /**
      * @param  {Request} req
      * @param  {Response} res
@@ -38,28 +17,19 @@ class UserController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
         
-        let query: any = await util.getQuery(req.query, res,req, User);
-        
-        if(!query)
-            return ;
-        
-        getConnection().getRepository(User)           
-            .find({
-                where: query.filter,
-                order: query.order,
-                skip : query.start,
-                take : query.range
-            })
+        await util.getQuery(req.query, res,req, User)
             .then((data) => {
+                if(!data)
+                    return ;
 
-                if(data.length === query.countAll)
-                    res.status(200).json(this.getUsers(data));
+                if(data.results.length === data.query.countAll)
+                    res.status(200).json(User.getUsers(data.results));
                 else{
                     //set header for pagination
-                    util.setPagination(query, req, res)
+                    util.setPagination(data.query, req, res);
 
                     //result a part of users
-                    res.status(206).json(this.getUsers(data));
+                    res.status(206).json(User.getUsers(data.results));
                 }
             })
             .catch((error: Error) => {
@@ -75,7 +45,7 @@ class UserController{
      */
     public get = (req: Request, res: Response, next: NextFunction): void => {
         
-        res.status(200).json(this.getUser(this.userFind));
+        res.status(200).json(User.getUser(this.userFind));
     }
 
     /**
@@ -90,7 +60,7 @@ class UserController{
 
         getConnection().getRepository(User).save(user)            
         .then(() => {
-            res.status(201).json(this.getUser(user));
+            res.status(201).json(User.getUser(user));
         })
         .catch((error: Error) => {
             next(error);
@@ -108,7 +78,7 @@ class UserController{
 
         getConnection().getRepository(User).save(this.userFind)            
         .then((data) => {
-            res.status(200).json(this.getUser(data));
+            res.status(200).json(User.getUser(data));
         })
         .catch((error: Error) => {
             next(error);
@@ -126,7 +96,7 @@ class UserController{
 
         getConnection().getRepository(User).save(this.userFind)            
         .then((data) => {
-            res.status(200).json(this.getUser(data));
+            res.status(200).json(User.getUser(data));
         })
         .catch((error: Error) => {
             next(error);
