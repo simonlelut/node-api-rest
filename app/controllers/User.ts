@@ -19,8 +19,6 @@ class UserController{
         
         await util.getQuery(req.query, res,req, User)
             .then((data) => {
-                if(!data)
-                    return ;
 
                 if(data.results.length === data.query.countAll)
                     res.status(200).json(User.getUsers(data.results));

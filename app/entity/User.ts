@@ -4,6 +4,7 @@ import { querySchemaGeneric } from './../util/schema';
 import faker from 'faker';
 import {getConnection} from "typeorm";
 import async from "async";
+import moment from "moment";
 
 @Entity()
 export class User {
@@ -12,15 +13,21 @@ export class User {
     id!: number;
 
     @Column({
-        length: 100
+        length: 100,
+        type: "varchar"
     })
     name!: string;
 
     @Column({
         length: 100,
-        nullable: true
+        type: "varchar"
     })
     username!: string;
+
+    @Column({
+        type: "date"
+    })
+    create_at!: Date;
 
     static filters : string[] = ["name","username"];
 
@@ -37,24 +44,40 @@ export class User {
         username: Joi
             .string()
             .regex(/\b[^\d\W]+\b/),
+        day: Joi
+            .string(),
+        month: Joi
+            .string(),
+        year: Joi
+            .string(),
     })
 
     static addUsers = async (number) => {
         let users: User[] = [];
+
         for(let i = 0; i < number; i++){
+
+            if(users.length > 10000){
+                await getConnection().getRepository(User).save(users, { chunk: 10000 })
+                console.log("add 10K users")
+                users = [];
+            }
             let user = new User();
-            user.name = faker.name.findName();
-            user.username = faker.name.findName();
-            users.push(user);
+            user.name = faker.name.findName().toLocaleLowerCase();
+            user.username = faker.name.findName().toLocaleLowerCase();
+            user.create_at = faker.date.past();
+            await users.push(user);
         }
-        await getConnection().getRepository(User).save(users)
+
+        await getConnection().getRepository(User).save(users, { chunk: 10000 })
     }
 
     static getUser = (user : User) => {
         let data = {
             "id"    : user.id,
             "name"  : user.name,
-            "username": user.username
+            "username": user.username,
+            "create_at": moment.utc(user.create_at).format("DD-MM-YYYY")
         };
         if(data.username === null)
             delete data.username;

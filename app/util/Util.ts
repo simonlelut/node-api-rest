@@ -1,17 +1,22 @@
 import {Request, Response} from 'express';
 import {getConnection, Like} from "typeorm";
 import async from 'async';
+import _ from 'lodash';
 
 class Util{
 
 
     public getQuery = async (query: Request["query"], res: Response, req: Request, classe: any)=>{
 
-        
-
         res.setHeader("Accept-Range", `${req.app.get('config').maxRangePagination}`);
         
         let result: any = {}, queries: string[]
+
+
+        //default
+        result.start    = 0;
+        result.end      = req.app.get('config').defaultPaginationRange;
+        result.range    = req.app.get('config').defaultPaginationRange;
 
         if(query.range){
 
@@ -33,42 +38,47 @@ class Util{
                 return;
             }
         }
-        else {
-            result.start    = 0;
-            result.end      = req.app.get('config').defaultPaginationRange;
-            result.range    = req.app.get('config').defaultPaginationRange;
-        }
 
-        //tri, 
+        //tri
         if(query.sort){
             result.sort = query.sort.split(",")
             
             let order = [];
-            for(let i = 0; i < result.sort.length; i++){
-                //si query.sort et query.desc alors descendant, sinon ascendant
-                if(query.desc && query.desc.includes(result.sort[i]))
-                    order[result.sort[i]] = "DESC"
-                else
-                    order[result.sort[i]] = "ASC"
-            }
+
+            async.forEachOf(result.sort, (_sort, key)=>{
+                 //si query.sort et query.desc alors descendant, sinon ascendant
+                 if(query.desc && query.desc.includes(result.sort[key]))
+                 order[result.sort[key]] = "DESC"
+             else
+                 order[result.sort[key]] = "ASC"
+            })
+
             result.order = order;
             delete query.sort;
             delete query.desc;
         }
-        else
-            result.sort = ""
+        
+        // non specific query (exemple: name, date)
+        if(! _.isEmpty(query)){
+            
+            if( query.year ||  query.month|| query.day )
 
-        if(query !== {}){
-            
-            result.filter = Object.keys(query);
-            let keys = Object.keys(query).map(i => query[i]);
-            
-            let filters = [];
-            for(let i = 0; i < result.filter.length; i++){
-                filters[result.filter[i]] = Like(`${keys[i]}`)
+                result.filter =  `date_part('${Object.keys(query)}', create_at) = ${Object.keys(query).map(i => query[i])[0]}`;
+
+            else{
+                result.filter = Object.keys(query);
+                let keys = Object.keys(query).map(i => query[i]);
+                
+                let filters = [];
+                
+                async.forEachOf(result.filter, (_filter, key)=>{
+                    
+                    filters[result.filter[key]] = Like(keys[key])
+                })
+    
+                result.filter = Object.assign({}, filters);
             }
-
-            result.filter = Object.assign({}, filters);
+            
         }
 
         let data = await getConnection().getRepository(classe)           

@@ -1,8 +1,6 @@
 import express from 'express';
 import UserRouter from './UserRouter'
 
-
-
 const router = express();
 
 //for swagger
@@ -12,8 +10,6 @@ const swaggerDocument = YAML.load('api/swagger/swagger.yaml');
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDocument));
 
-
-
 router.use('/users', UserRouter);
 
 router.all('*',(req,res) => {
@@ -21,7 +17,6 @@ router.all('*',(req,res) => {
 })
 
 router.use((err, req, res, next) => {
-    console.log(err)
 
     if (err.error.message) {
         res.status(400).json({
