@@ -7,11 +7,10 @@ class Util{
 
 
     public getQuery = async (query: Request["query"], res: Response, req: Request, classe: any)=>{
-
+        
         res.setHeader("Accept-Range", `${req.app.get('config').maxRangePagination}`);
         
         let result: any = {}, queries: string[]
-
 
         //default
         result.start    = 0;
@@ -38,13 +37,12 @@ class Util{
                 return;
             }
         }
-
+        
         //tri
         if(query.sort){
             result.sort = query.sort.split(",")
             
             let order = [];
-
             async.forEachOf(result.sort, (_sort, key)=>{
                  //si query.sort et query.desc alors descendant, sinon ascendant
                  if(query.desc && query.desc.includes(result.sort[key]))
@@ -61,36 +59,38 @@ class Util{
         // non specific query (exemple: name, date)
         if(! _.isEmpty(query)){
             
-            if( query.year ||  query.month|| query.day )
-
-                result.filter =  `date_part('${Object.keys(query)}', create_at) = ${Object.keys(query).map(i => query[i])[0]}`;
-
-            else{
-                result.filter = Object.keys(query);
-                let keys = Object.keys(query).map(i => query[i]);
+            result.filter = "";
+            async.forEachOf(Object.keys(query), (key)=>{
+                switch (key) {
+                    case "year":
+                        result.filter +=  ` date_part('year', create_at) ${query[key]} and`;
+                        break;
+                    case "month":
+                        result.filter +=  ` date_part('month', create_at) ${query[key]} and`;
+                        break;
+                    case "day":
+                        result.filter +=  ` date_part('day', create_at) ${query[key]} and`;
+                        break;
                 
-                let filters = [];
-                
-                async.forEachOf(result.filter, (_filter, key)=>{
-                    
-                    filters[result.filter[key]] = Like(keys[key])
-                })
-    
-                result.filter = Object.assign({}, filters);
-            }
-            
+                    default:
+                        result.filter += ` ${key} like '${query[key]}' and`
+                        break;
+                }
+            });
+            //delete last and
+            result.filter = result.filter.substring(0, result.filter.length - 3);
         }
 
-        let data = await getConnection().getRepository(classe)           
-            .findAndCount({
-                where: result.filter,
-                order: result.order,
-                skip : result.start,
-                take : result.range
-            });
-
+        let data = await getConnection()
+            .getRepository(classe)
+            .createQueryBuilder()
+            .where(result.filter)
+            .skip(result.start)
+            .take(result.range)
+            .orderBy(result.order)
+            .getManyAndCount();
+        
         result.countAll = data[1]
-
         res.setHeader("Content-Range", `${result.start}-${result.end}/${result.countAll}`);
 
         return {
@@ -98,6 +98,7 @@ class Util{
             results: data[0]
         }
     }
+    
 
     public setPagination = (query: any, req: Request, res : Response) => {
 

@@ -16,15 +16,9 @@ router.all('*',(req,res) => {
     res.status(404).send({msg:"route not found"})
 })
 
-router.use((err, req, res, next) => {
+router.use((err, _req, _res, next) => {
+    next(err)
+});
 
-    if (err.error.message) {
-        res.status(400).json({
-          message: err.error.message,
-        });
-    } else {
-        next(err)
-    }
-  });
 
 export default router;

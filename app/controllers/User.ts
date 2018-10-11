@@ -41,7 +41,7 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public get = (req: Request, res: Response, next: NextFunction): void => {
+    public get = (_req: Request, res: Response): void => {
         
         res.status(200).json(User.getUser(this.userFind));
     }

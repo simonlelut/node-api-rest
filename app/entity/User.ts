@@ -22,26 +22,24 @@ export class User {
         length: 100,
         type: "varchar"
     })
-    username!: string;
+    lastname!: string;
 
     @Column({
         type: "date"
     })
     create_at!: Date;
 
-    static filters : string[] = ["name","username"];
+    static filters : string[] = ["name","lastname"];
 
     static querySchema = querySchemaGeneric.keys({
         sort: Joi
-            .string()
-            .valid(User.filters),
+            .string(),
         desc: Joi
-            .string()
-            .valid(User.filters),
+            .string(),
         name: Joi
             .string()
             .regex(/\b[^\d\W]+\b/),
-        username: Joi
+        lastname: Joi
             .string()
             .regex(/\b[^\d\W]+\b/),
         day: Joi
@@ -63,8 +61,8 @@ export class User {
                 users = [];
             }
             let user = new User();
-            user.name = faker.name.findName().toLocaleLowerCase();
-            user.username = faker.name.findName().toLocaleLowerCase();
+            user.name = faker.name.firstName().toLocaleLowerCase();
+            user.lastname = faker.name.lastName().toLocaleLowerCase();
             user.create_at = faker.date.past();
             await users.push(user);
         }
@@ -76,12 +74,10 @@ export class User {
         let data = {
             "id"    : user.id,
             "name"  : user.name,
-            "username": user.username,
+            "lastname": user.lastname,
             "create_at": moment.utc(user.create_at).format("DD-MM-YYYY")
         };
-        if(data.username === null)
-            delete data.username;
-
+        
         return data
     }
 
