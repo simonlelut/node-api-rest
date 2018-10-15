@@ -20,12 +20,14 @@ export class User {
 
     @Column({
         length: 100,
-        type: "varchar"
+        type: "varchar",
+        nullable: true
     })
     lastname!: string;
 
     @Column({
-        type: "date"
+        type: "date",
+        nullable: true
     })
     create_at!: Date;
 

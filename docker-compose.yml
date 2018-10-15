@@ -1,0 +1,17 @@
+version: '2.1'
+
+services:
+  node-api-rest:
+    image: node-api-rest
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 80:3000
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+      POSTGRES_USER: postgres

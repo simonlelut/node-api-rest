@@ -21,4 +21,3 @@ before_install:
 after_success:
 - ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
 - npm i pm2 -g
-- npm run deploy
