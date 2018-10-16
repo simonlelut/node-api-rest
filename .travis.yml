@@ -3,4 +3,3 @@ env:
 before_install:
   - ls -lah
   - docker-compose up -d node-api-rest
-  - docker-compose ps
