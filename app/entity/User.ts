@@ -5,7 +5,7 @@ import faker from 'faker';
 import {getConnection} from "typeorm";
 import async from "async";
 import moment from "moment";
-
+faker.locale = "fr";
 @Entity()
 export class User {
 

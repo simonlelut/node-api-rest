@@ -8,9 +8,11 @@ services:
     ports:
       - 80:3000
   db:
-    image: postgres
+    image: postgres:latest
     restart: always
+    ports:
+      - "5432:5432"
     environment:
-      POSTGRES_DB: test
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
