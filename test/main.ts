@@ -16,8 +16,8 @@ let server;
 let connection;
 
 before(async () => { 
-
     await Application.getApp(config).then(async serv => { 
+       
         server = serv;
         connection = await getConnection();
     });
