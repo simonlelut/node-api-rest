@@ -1,5 +1,4 @@
 version: '2.1'
-
 services:
   node-api-rest:
     image: node-api-rest
