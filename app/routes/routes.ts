@@ -10,6 +10,9 @@ const swaggerDocument = YAML.load('api/swagger/swagger.yaml');
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDocument));
 
+router.get('/config', (req,res) =>{
+    res.status(200).json(req.app.get('config'))
+});
 router.use('/users', UserRouter);
 
 router.all('*',(req,res) => {
