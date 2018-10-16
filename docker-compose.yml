@@ -11,6 +11,6 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: test
       POSTGRES_DB: test
       POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
