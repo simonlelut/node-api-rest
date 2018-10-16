@@ -12,7 +12,7 @@
     },
     "databaseTest" : {
         "type": "postgres",
-        "host": "db",
+        "host": "localhost",
         "port": 32768,
         "username": "postgres",
         "password": "test",
