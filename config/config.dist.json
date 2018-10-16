@@ -15,7 +15,7 @@
         "host": "localhost",
         "port": 5432,
         "username": "postgres",
-        "password": "",
+        "password": "test",
         "database": "test",
         "entities": ["app/entity/*.ts"],
         "synchronize": true,

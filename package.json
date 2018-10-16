@@ -36,7 +36,6 @@
     "@types/helmet": "0.0.42",
     "@types/joi": "^13.6.0",
     "@types/lodash": "^4.14.117",
-    "@types/moment": "^2.13.0",
     "@types/node": "^10.11.3",
     "@types/response-time": "^2.3.2",
     "@types/validator": "^9.4.2",
