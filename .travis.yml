@@ -9,5 +9,5 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - ls -lah
-  - docker-compose up -d node-api-rest
+  - docker-compose up -f "docker-compose.yml"
   - docker ps -a
