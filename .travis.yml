@@ -9,5 +9,5 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - ls -lah
-  - docker-compose up -f "docker-compose.yml"
+  - docker-compose up -f "docker-compose.yml" -d --build
   - docker ps -a
