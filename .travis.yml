@@ -1,23 +1,6 @@
-language: node_js
-node_js:
-- '10'
-services: postgresql
-addons:
-  ssh_known_hosts:
-  - 51.38.49.215
-before_script:
-- psql -c 'create database test;' -U postgres
-cache:
-  directories:
-  - node_modules
+env:
+  - DOCKER_COMPOSE_VERSION=1.4.2
 before_install:
-- openssl aes-256-cbc -K $encrypted_7382dfd1c392_key -iv $encrypted_7382dfd1c392_iv
-  -in encryptFiles.tar.enc -out encryptFiles.tar -d
-- tar xvf encryptFiles.tar
-- eval "$(ssh-agent -s)"
-- chmod 600 ./deploy_key
-- ssh-add ./deploy_key
-- ssh -i ./deploy_key root@51.38.49.215 pwd
-after_success:
-- ls -al /bin/sh && sudo rm /bin/sh && sudo ln -s /bin/bash /bin/sh && ls -al /bin/sh
-- npm i pm2 -g
+  - ls -lah
+  - docker-compose up -d node-api-rest
+  - docker-compose ps
