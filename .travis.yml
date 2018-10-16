@@ -1,5 +1,8 @@
+sudo: required
+language: ruby
 env:
   - DOCKER_COMPOSE_VERSION=1.4.2
 before_install:
   - ls -lah
   - docker-compose up -d node-api-rest
+  - docker ps -a
