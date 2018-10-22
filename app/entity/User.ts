@@ -52,23 +52,18 @@ export class User {
             .string(),
     })
 
-    static addUsers = async (number) => {
-        let users: User[] = [];
+    static addUsers = async (number: Number) => {
 
-        for(let i = 0; i < number; i++){
-
-            if(users.length > 10000){
-                await getConnection().getRepository(User).save(users, { chunk: 10000 })
-                console.log("add 10K users")
-                users = [];
-            }
-            let user = new User();
-            user.name = faker.name.firstName().toLocaleLowerCase();
-            user.lastname = faker.name.lastName().toLocaleLowerCase();
-            user.create_at = faker.date.past();
-            await users.push(user);
-        }
-
+        let users = Array(number)
+            .fill(null)
+            .map( _ =>{
+                let user  = new User();
+                user.name = faker.name.firstName().toLocaleLowerCase();
+                user.lastname = faker.name.lastName().toLocaleLowerCase();
+                user.create_at = faker.date.past();
+                return user;
+            })
+        
         await getConnection().getRepository(User).save(users, { chunk: 10000 })
     }
 
@@ -84,11 +79,9 @@ export class User {
     }
 
     static getUsers = (users) => {
-        let result = [];
-        async.forEachOf(users, (user)=>{
-            result.push(User.getUser(user as User))
-        })
-        return result;
+        return users.map(user => {
+            return User.getUser(user);
+        });
     }
     
 }
