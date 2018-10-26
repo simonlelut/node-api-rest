@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import {getConnection, Like} from "typeorm";
-import async from 'async';
 import _ from 'lodash';
 
 class Util{
@@ -43,13 +42,14 @@ class Util{
             result.sort = query.sort.split(",")
             
             let order = [];
-            async.forEachOf(result.sort, (_sort, key)=>{
-                 //si query.sort et query.desc alors descendant, sinon ascendant
-                 if(query.desc && query.desc.includes(result.sort[key]))
-                 order[result.sort[key]] = "DESC"
-             else
-                 order[result.sort[key]] = "ASC"
-            })
+
+            //pour chaque variables a trier
+            result.sort.map(sort =>{    
+                //si elle est aussi dans 'desc' alors tri descendant sinon tris ascendant
+                query.desc.split(',').map(desc =>{
+                    desc === sort ? order[sort] = "DESC": order[sort] = "ASC";
+                })
+            });
 
             result.order = order;
             delete query.sort;
@@ -60,23 +60,24 @@ class Util{
         if(! _.isEmpty(query)){
             
             result.filter = "";
-            async.forEachOf(Object.keys(query), (key)=>{
-                switch (key) {
+
+            Object.keys(query).map(word =>{
+                switch (word) {
                     case "year":
-                        result.filter +=  ` date_part('year', create_at) ${query[key]} and`;
+                        result.filter +=  ` date_part('year', create_at) ${query[word]} and`;
                         break;
                     case "month":
-                        result.filter +=  ` date_part('month', create_at) ${query[key]} and`;
+                        result.filter +=  ` date_part('month', create_at) ${query[word]} and`;
                         break;
                     case "day":
-                        result.filter +=  ` date_part('day', create_at) ${query[key]} and`;
+                        result.filter +=  ` date_part('day', create_at) ${query[word]} and`;
                         break;
                 
                     default:
-                        result.filter += ` ${key} like '${query[key]}' and`
+                        result.filter += ` ${word} like '${query[word]}' and`
                         break;
                 }
-            });
+            })
             //delete last and
             result.filter = result.filter.substring(0, result.filter.length - 3);
         }
