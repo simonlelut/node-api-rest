@@ -36,7 +36,7 @@ class Util{
                 return;
             }
         }
-        
+    
         //tri
         if(query.sort){
             result.sort = query.sort.split(",")
