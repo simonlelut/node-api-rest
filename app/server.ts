@@ -74,6 +74,8 @@ export class Application {
 
         this.server= http.createServer(app);
 
+        var io = require('socket.io')(this.server);
+
         // server handlers
         this.server.on('error', (error) => console.error(error));
          
@@ -82,6 +84,19 @@ export class Application {
         // server listen
         await this.server.listen(port);
         console.log(`Server running on port: ${port}`);
+
+        io.emit('server', "everyone");
+        io.on('connection',  (socket) =>{
+            socket.emit('server', "Bien souscris au socket !");
+
+            socket.on('event1', (data) =>{
+              console.log(data);
+            });
+
+            socket.on('event2', (data) =>{
+                console.log(data)
+            })
+          });
 
         return app;
     }

@@ -57,11 +57,12 @@
     "pg": "^7.4.3",
     "reflect-metadata": "^0.1.12",
     "response-time": "^2.3.2",
+    "socket.io": "^2.1.1",
     "swagger-ui-express": "^4.0.1",
     "typeorm": "^0.2.7",
+    "typescript": "^3.1.1",
     "validators": "^0.3.1",
-    "yamljs": "^0.3.0",
-    "typescript": "^3.1.1"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
