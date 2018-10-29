@@ -7,6 +7,8 @@ services:
       NODE_ENV: production
     ports:
       - 80:3000
+    volumes:
+      - .:/node-api-rest
   db:
     image: postgres:latest
     restart: always
