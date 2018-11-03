@@ -31,6 +31,13 @@ export class User {
     })
     create_at!: Date;
 
+
+    @Column({
+        type: "varchar",
+        nullable: true
+    })
+    image!: string;
+
     static filters : string[] = ["name","lastname"];
 
     static querySchema = querySchemaGeneric.keys({
@@ -66,6 +73,7 @@ export class User {
             user.name = faker.name.firstName().toLocaleLowerCase();
             user.lastname = faker.name.lastName().toLocaleLowerCase();
             user.create_at = faker.date.past();
+            user.image = "https://s3.eu-west-3.amazonaws.com/nodeapirest/default.png";
             await users.push(user);
         }
 
@@ -77,6 +85,7 @@ export class User {
             "id"    : user.id,
             "name"  : user.name,
             "lastname": user.lastname,
+            "profile_image" : user.image,
             "create_at": moment.utc(user.create_at).format("DD-MM-YYYY")
         };
         

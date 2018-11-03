@@ -54,7 +54,12 @@ class UserController{
     public create = (req: Request, res: Response, next: NextFunction): void => {
 
         let user = new User();
-        user = req.body;
+        user.lastname = req.body.lastname;
+        user.name = req.body.name;
+        user.create_at = new Date();
+
+        if(req.file)
+            user.image = req.file.location;
 
         getConnection().getRepository(User).save(user)            
         .then(() => {
@@ -72,25 +77,18 @@ class UserController{
      */
     public put = (req: Request, res: Response, next: NextFunction): void => {
 
-        this.userFind = req.body;
-
-        getConnection().getRepository(User).save(this.userFind)            
-        .then((data) => {
-            res.status(200).json(User.getUser(data));
+        req.body.map( (key) =>{
+            console.log(key)
         })
-        .catch((error: Error) => {
-            next(error);
-        });
-    }
 
-    /**
-     * @param  {Request} req
-     * @param  {Response} res
-     * @param  {NextFunction} next
-     */
-    public patch = (req: Request, res: Response, next: NextFunction): void => {
+        if(req.body.lastname)
+            this.userFind.lastname = req.body.lastname;
 
-        this.userFind.name = req.body.name;
+        if(req.body.name)
+            this.userFind.name = req.body.name;
+
+        if(req.file)
+            this.userFind.image = req.file.location;
 
         getConnection().getRepository(User).save(this.userFind)            
         .then((data) => {

@@ -19,7 +19,7 @@ export class Application {
 
     static server: http.Server; 
 
-    public static async getApp(config? : any): Promise<express.Express> {
+    public static async getApp(config? : any) {
 
         //if no config set use default 
         config =  config ? config : require("../config/config.json");
@@ -85,20 +85,8 @@ export class Application {
         await this.server.listen(port);
         console.log(`Server running on port: ${port}`);
 
-        io.emit('server', "everyone");
-        io.on('connection',  (socket) =>{
-            socket.emit('server', "Bien souscris au socket !");
-
-            socket.on('event1', (data) =>{
-              console.log(data);
-            });
-
-            socket.on('event2', (data) =>{
-                console.log(data)
-            })
-          });
-
         return app;
+
     }
     
     public static stop() {
