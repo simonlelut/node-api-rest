@@ -57,7 +57,7 @@ export default express()
 
     .param("userId", UserController.userId)
     .get('/populate/:nbPopulate', async (req,res) =>{
-        await User.addUsers(req.params.nbPopulate);
+        await User.addUsers(Number(req.params.nbPopulate));
         res.status(200).json({message : `add ${req.params.nbPopulate} users`});
         
     })

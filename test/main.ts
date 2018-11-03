@@ -24,15 +24,20 @@ before(async () => {
 });
 
 
-const addUsers = async (number) => {
-    for(let i = 0; i < number; i++){
-            
-        let user = new User();
-        user.name = faker.name.findName();
-        await connection.getRepository(User).save(user).then();
-    }
-}
+const addUsers = async (number: Number) => {
 
+    let users = Array(number)
+        .fill(null)
+        .map( _ =>{
+            let user  = new User();
+            user.name = faker.name.firstName().toLocaleLowerCase();
+            user.lastname = faker.name.lastName().toLocaleLowerCase();
+            user.create_at = faker.date.past();
+            return user;
+        })
+    
+    await getConnection().getRepository(User).save(users, { chunk: 10000 })
+}
 const deleteUsers = async () =>{
     connection.getRepository(User).delete({});
 }

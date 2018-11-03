@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction, json} from 'express';
 import {User} from "../entity/User";
 import {getConnection, Like} from "typeorm";
 import util from "../util/Util";
@@ -76,10 +76,6 @@ class UserController{
      * @param  {NextFunction} next
      */
     public put = (req: Request, res: Response, next: NextFunction): void => {
-
-        req.body.map( (key) =>{
-            console.log(key)
-        })
 
         if(req.body.lastname)
             this.userFind.lastname = req.body.lastname;
