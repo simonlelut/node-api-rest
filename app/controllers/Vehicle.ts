@@ -1,14 +1,14 @@
 import {Request, Response, NextFunction, json} from 'express';
-import {User} from "../entity/User";
+import {Vehicle} from "../entity/Vehicle";
 import {getConnection, Like} from "typeorm";
 import util from "../util/Util";
 
 /**
  * 
  */
-class UserController{
+class VehicleController{
 
-    private userFind : User;
+    private vehicleFind : Vehicle;
     
     /**
      * @param  {Request} req
@@ -17,17 +17,17 @@ class UserController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
         
-        await util.getQuery(req.query, res,req, User)
+        await util.getQuery(req.query, res,req, Vehicle)
             .then((data) => {
 
                 if(data.results.length === data.query.countAll)
-                    res.status(200).json(User.getUsers(data.results));
+                    res.status(200).json(Vehicle.getVehicles(data.results));
                 else{
                     //set header for pagination
                     util.setPagination(data.query, req, res);
 
-                    //result a part of users
-                    res.status(206).json(User.getUsers(data.results));
+                    //result a part of vehicles
+                    res.status(206).json(Vehicle.getVehicles(data.results));
                 }
             })
             .catch((error: Error) => {
@@ -43,7 +43,7 @@ class UserController{
      */
     public get = (_req: Request, res: Response): void => {
         
-        res.status(200).json(User.getUser(this.userFind));
+        res.status(200).json(Vehicle.getVehicle(this.vehicleFind));
     }
 
     /**
@@ -52,12 +52,12 @@ class UserController{
      * @param  {NextFunction} next
      */
     public create = (req: Request, res: Response, next: NextFunction): void => {
+        
+        let vehicle = Vehicle.createVehicle(req);
 
-        let user = User.createUser(req);
-
-        getConnection().getRepository(User).save(user)            
+        getConnection().getRepository(Vehicle).save(vehicle)            
         .then(() => {
-            res.status(201).json(User.getUser(user));
+            res.status(201).json(Vehicle.getVehicle(vehicle));
         })
         .catch((error: Error) => {
             next(error);
@@ -70,12 +70,13 @@ class UserController{
      * @param  {NextFunction} next
      */
     public put = (req: Request, res: Response, next: NextFunction): void => {
-
-        this.userFind = User.updateUser(this.userFind, req);
         
-        getConnection().getRepository(User).save(this.userFind)            
+
+        this.vehicleFind = Vehicle.updateVehicle(this.vehicleFind, req);
+
+        getConnection().getRepository(Vehicle).save(this.vehicleFind)            
         .then((data) => {
-            res.status(200).json(User.getUser(data));
+            res.status(200).json(Vehicle.getVehicle(data));
         })
         .catch((error: Error) => {
             next(error);
@@ -87,15 +88,16 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public delete = (req: Request, res: Response, next: NextFunction): void => {
+    public delete = (_req: Request, res: Response, next: NextFunction): void => {
 
-        getConnection().getRepository(User).delete(this.userFind)            
+        getConnection().getRepository(Vehicle).delete(this.vehicleFind.id)
         .then(() => {
-            res.status(200).json({message : "User delete !"});
+            res.status(200).json({message : "Vehicle delete !"});
         })
         .catch((error: Error) => {
             next(error);
-        });
+        });            
+      
     }
 
     /**
@@ -104,15 +106,15 @@ class UserController{
      * @param  {NextFunction} next
      * @param  {nNumber} id
      */
-    public userId = (_req: Request, res: Response, next: NextFunction, id: number): void  => {
+    public vehicleId = (_req: Request, res: Response, next: NextFunction, id: number): void  => {
 
-        getConnection().getRepository(User).findOne({id: id})
-            .then((user) => {
+        getConnection().getRepository(Vehicle).findOne({id: id})
+            .then((vehicle) => {
 
-                if(!user)
-                    return res.status(404).json("this User doesn't exist !");
+                if(!vehicle)
+                    return res.status(404).json("this Vehicle doesn't exist !");
 
-                    this.userFind  = user;
+                    this.vehicleFind  = vehicle;
                 next();
             })
             .catch((error: Error) => {
@@ -122,4 +124,4 @@ class UserController{
     }
 }
 
-export default new UserController();
+export default new VehicleController();

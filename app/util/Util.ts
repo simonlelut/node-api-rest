@@ -44,11 +44,15 @@ class Util{
             let order = [];
 
             //pour chaque variables a trier
-            result.sort.map(sort =>{    
+            result.sort.map(sort =>{
+                order[sort] = "ASC"    
                 //si elle est aussi dans 'desc' alors tri descendant sinon tris ascendant
-                query.desc.split(',').map(desc =>{
-                    desc === sort ? order[sort] = "DESC": order[sort] = "ASC";
-                })
+                if(query.desc){
+                    query.desc.split(',').map(desc =>{
+                        if(desc === sort)
+                            order[sort] = "DESC";
+                    })
+                }
             });
 
             result.order = order;

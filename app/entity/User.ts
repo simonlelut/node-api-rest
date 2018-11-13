@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 import Joi from 'joi';
 import { querySchemaGeneric } from './../util/schema';
@@ -90,6 +91,33 @@ export class User {
         return users.map(user => {
             return User.getUser(user);
         });
+    }
+
+
+    static createUser = (req :Request): User => {
+        let user = new User();
+        user.lastname = req.body.lastname;
+        user.name = req.body.name;
+        user.create_at = new Date();
+
+        if(req.file)
+            user.image = req.file.location;
+
+        return user;
+    }
+
+    static updateUser = (user: User, req : Request): User => {
+        
+        if(req.body.lastname)
+            user.lastname = req.body.lastname;
+
+        if(req.body.name)
+            user.name = req.body.name;
+
+        if(req.file)
+            user.image = req.file.location;
+
+        return user;
     }
     
 }
