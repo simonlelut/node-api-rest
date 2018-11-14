@@ -22,6 +22,6 @@
         "logging" : false
     },
     "uri" : "http://localhost:3000",
-    "defaultPaginationRange": 20,
-    "maxRangePagination"    : 50
+    "maxPerPage" : 50,
+    "defaultPerPage" : 20
 }

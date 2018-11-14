@@ -73,22 +73,11 @@ export class Vehicle {
     static filters : string[] = ["modele","year_vehicle"];
 
     static querySchema = querySchemaGeneric.keys({
-        sort: Joi
+        modele: Joi
             .string(),
-        desc: Joi
-            .string(),
-        name: Joi
-            .string()
-            .regex(/\b[^\d\W]+\b/),
         year_vehicle: Joi
             .string()
             .regex(/\b[^\d\W]+\b/),
-        day: Joi
-            .string(),
-        month: Joi
-            .string(),
-        year: Joi
-            .string(),
     })
 
     static addVehicles = async (number: Number) => {

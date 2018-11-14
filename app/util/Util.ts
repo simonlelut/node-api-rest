@@ -3,40 +3,29 @@ import {getConnection, Like} from "typeorm";
 import _ from 'lodash';
 
 class Util{
+   
 
 
-    public getQuery = async (query: Request["query"], res: Response, req: Request, classe: any)=>{
+    public getQuery = async ( res: Response, req: Request, classe: any)=>{
+        let query = req.query;
         
-        res.setHeader("Accept-Range", `${req.app.get('config').maxRangePagination}`);
-        
-        let result: any = {}, queries: string[]
+        let result: any = {};
+
+        result.maxPerPage = req.app.get('config').maxPerPage;
 
         //default
-        result.start    = 0;
-        result.end      = req.app.get('config').defaultPaginationRange;
-        result.range    = req.app.get('config').defaultPaginationRange;
+        result.page = query.page ? query.page : 1;
+        result.skip = 0; 
+        result.per_page = query.per_page ? query.per_page : req.app.get('config').defaultPerPage;
+        result.skip = (result.page - 1) * result.per_page;
+        delete query.per_page;
+        delete query.page;
 
-        if(query.range){
-
-            queries= query.range.split("-");
-            result.start = Number(queries[0]);
-            result.end = Number(queries[1]);
-
-            result.range = result.end - result.start;
-
-            delete query.range;
-
-            if(result.start === undefined || 
-                result.end === undefined || 
-                result.range > req.app.get('config').maxRangePagination || 
-                result.range <= 0 || 
-                result.start >= result.end){
-
-                res.status(400).json({reason : "Requested range not allowed"});
-                return;
-            }
+        if(result.per_page > result.maxPerPage){
+            
+            res.status(400).json({reason : "Requested per_page not allowed"});
+            return;
         }
-    
         //tri
         if(query.sort){
             result.sort = query.sort.split(",")
@@ -85,51 +74,35 @@ class Util{
             //delete last and
             result.filter = result.filter.substring(0, result.filter.length - 3);
         }
-
         let data = await getConnection()
             .getRepository(classe)
             .createQueryBuilder()
             .where(result.filter)
-            .skip(result.start)
-            .take(result.range)
+            .skip(result.skip)
+            .take(result.per_page)
             .orderBy(result.order)
             .getManyAndCount();
         
         result.countAll = data[1]
-        res.setHeader("Content-Range", `${result.start}-${result.end}/${result.countAll}`);
+
+        result.numberPages = Math.floor(result.countAll / result.per_page);
+        result.numberPages = result.numberPages === 0 ? 1 : result.numberPages;
 
         return {
             query: result,
             results: data[0]
         }
     }
-    
 
-    public setPagination = (query: any, req: Request, res : Response) => {
 
-        let start = query.start;
-        let range = query.range;
-        let end = query.end;
-        let countAll = query.countAll;
-        let uri = req.app.get('config').uri + "/users";
-        let header: string = "";
-
-        if(start != 0)
-            header += `<${uri}?range=0-${range}>; rel="first",`; 
-
-        if(start > 0 && start - range > 0)
-            header += `<${uri}?range=${start - range}-${start}>; rel="prev",`;
-        
-        if( range * 2 < countAll && end < countAll){
-            header += `<${uri}?range=${start + range}-${end + range }>; rel="next",`;
-            header += `<${uri}?range=${countAll - range}-${countAll}>; rel="last",`;
+    getMeta(data) {
+        return {
+            "total_count"       : data.countAll,
+            "limit_per_pages"   : data.maxPerPage,
+            'number_pages'      : data.numberPages,
+            'current_per_pages' : data.per_page   
         }
-        else if(end != countAll && end < countAll)
-            header += `<${uri}?range=${end}-${countAll}>; rel="next",`;
-        
-        res.setHeader("Link",header.substring(0, header.length - 1));
     }
-
 }
 
 export default new Util();

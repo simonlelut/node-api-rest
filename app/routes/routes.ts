@@ -21,7 +21,10 @@ router.all('*',(req,res) => {
     res.status(404).send({msg:"route not found"})
 })
 
-router.use((err, _req, _res, next) => {
+router.use((err, _req, res, next)  => {
+   
+    if(err.error)
+        res.status(404).json(err.error.toString())
     next(err)
 });
 

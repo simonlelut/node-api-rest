@@ -17,23 +17,15 @@ class UserController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
         
-        await util.getQuery(req.query, res,req, User)
+        await util.getQuery(res,req, User)
             .then((data) => {
 
-                if(data.results.length === data.query.countAll)
-                    res.status(200).json(User.getUsers(data.results));
-                else{
-                    //set header for pagination
-                    util.setPagination(data.query, req, res);
-
-                    //result a part of users
-                    res.status(206).json(User.getUsers(data.results));
-                }
+                res.status(data.results.length === data.query.countAll ? 200 : 206)
+                    .json({meta: util.getMeta(data.query), content : User.getUsers(data.results)})
             })
             .catch((error: Error) => {
                 next(error);
             });
-        
     }
 
     /**

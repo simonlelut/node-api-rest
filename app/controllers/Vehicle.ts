@@ -17,18 +17,11 @@ class VehicleController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
         
-        await util.getQuery(req.query, res,req, Vehicle)
+        await util.getQuery(res, req, Vehicle)
             .then((data) => {
 
-                if(data.results.length === data.query.countAll)
-                    res.status(200).json(Vehicle.getVehicles(data.results));
-                else{
-                    //set header for pagination
-                    util.setPagination(data.query, req, res);
-
-                    //result a part of vehicles
-                    res.status(206).json(Vehicle.getVehicles(data.results));
-                }
+                res.status(data.results.length === data.query.countAll ? 200 : 206)
+                    .json({meta: util.getMeta(data.query), content : Vehicle.getVehicles(data.results)})
             })
             .catch((error: Error) => {
                 next(error);
