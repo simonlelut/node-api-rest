@@ -1,10 +1,13 @@
 import { Request } from 'express';
-import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from "typeorm";
 import Joi from 'joi';
 import { querySchemaGeneric } from './../util/schema';
 import faker from 'faker';
 import {getConnection} from "typeorm";
+import jwt from 'jsonwebtoken';
+import crypto  from "crypto";
 import moment from "moment";
+import { Group } from './Group';
 faker.locale = "fr";
 @Entity()
 export class User {
@@ -14,9 +17,27 @@ export class User {
 
     @Column({
         length: 100,
-        type: "varchar"
+        type: "varchar",
+        nullable: true
     })
     name!: string;
+
+    @Column({
+        length: 250,
+        type: "varchar"
+    })
+    salt!: string;
+
+    @Column({
+        type: "text"
+    })
+    hash!: string;
+
+    @Column({
+        length: 250,
+        type: "varchar"
+    })
+    email!: string;
 
     @Column({
         length: 100,
@@ -37,6 +58,10 @@ export class User {
         nullable: true
     })
     image!: string;
+
+
+    @ManyToOne(type => Group, group => group.users)
+    group: Group
 
     static filters : string[] = ["name","lastname"];
 
@@ -75,49 +100,84 @@ export class User {
         await getConnection().getRepository(User).save(users, { chunk: 10000 })
     }
 
-    static getUser = (user : User) => {
+    
+    public getUser = () => {
         let data = {
-            "id"    : user.id,
-            "name"  : user.name,
-            "lastname": user.lastname,
-            "profile_image" : user.image,
-            "create_at": moment.utc(user.create_at).format("DD-MM-YYYY")
+            user: {
+                id    : this.id,
+                name  : this.name,
+                lastname: this.lastname,
+                profile_image : this.image,
+                create_at: moment.utc(this.create_at).format("DD-MM-YYYY"),
+                email: this.email,
+                group : this.group,
+                token: this.generateJWT(),
+            }
         };
         
         return data
     }
 
     static getUsers = (users) => {
-        return users.map(user => {
-            return User.getUser(user);
+        
+        return users.map((user: User) => {
+            return user.getUser();
         });
     }
+    
 
 
     static createUser = (req :Request): User => {
-        let user = new User();
-        user.lastname = req.body.lastname;
-        user.name = req.body.name;
-        user.create_at = new Date();
+        let user = req.body.user;
+        let finalUser = new User();
+        finalUser.lastname = user.lastname;
+        finalUser.name = user.name;
+        finalUser.create_at = new Date();
+        finalUser.email = user.email;
+
+        //finalUser.group = "efeef";
 
         if(req.file)
-            user.image = req.file.location;
+            finalUser.image = req.file.location;
 
-        return user;
-    }
+        finalUser.setPassword(user.password);
 
-    static updateUser = (user: User, req : Request): User => {
-        
-        if(req.body.lastname)
-            user.lastname = req.body.lastname;
-
-        if(req.body.name)
-            user.name = req.body.name;
-
-        if(req.file)
-            user.image = req.file.location;
-
-        return user;
+        return finalUser;
     }
     
+    public updateUser = (user : User): void => {
+
+        if(user.lastname)
+            this.lastname = user.lastname;
+
+        if(user.name)
+            this.name = user.name;
+
+        if(user.image)
+            this.image = user.image;
+    }
+
+
+    private setPassword = (password): void => {
+        this.salt = crypto.randomBytes(16).toString('hex');
+        this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+    }
+
+    public validatePassword  = (password): boolean => {
+        const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+        return this.hash === hash;
+    }
+
+    protected generateJWT = () => {
+        const today = new Date();
+        const expirationDate = new Date(today);
+        expirationDate.setDate(today.getDate() + 60);
+      
+        return jwt.sign({
+          email: this.email,
+          id: this.id,
+          exp: expirationDate.getTime() / 1000,
+        }, 'secret');
+    }
+
 }

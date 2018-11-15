@@ -36,7 +36,7 @@ export class Vehicle {
         enum: [ "manuelle", "automatique"],
         nullable: false
     })
-    boite_vitesse! : String;
+    boite_vitesse! : string;
 
     @Column({
         nullable: false
@@ -125,7 +125,6 @@ export class Vehicle {
     }
 
     static createVehicle = (req :Request): Vehicle => {
-        console.log(req.body)
         let vehicle = new Vehicle();
         vehicle.id = req.body.id ? req.body.id : undefined;
         vehicle.type = req.body.typeVehicle;

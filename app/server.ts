@@ -11,6 +11,9 @@ import "reflect-metadata";
 import morgan from 'morgan';
 import {createConnection} from "typeorm";
 import responseTime  from "response-time";
+import session from "express-session";
+import passport from 'passport'
+import { strategy } from './util/middleware';
 
 //for typescript
 debug('ts-express:server');
@@ -39,7 +42,8 @@ export class Application {
         app.use(compression());
         app.use(helmet());
         app.use(cors());
-        app.use(responseTime())
+        app.use(responseTime()),
+        app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
         if(process.env.NODE_ENV !== "test"){
             app.use(morgan('combined'));
@@ -53,7 +57,9 @@ export class Application {
             .catch(e =>{
                 console.log(e);
                 process.exit(1);
-            });    
+            });
+        
+        passport.use(strategy);
 
         // cors
         app.use((req, res, next) => {
