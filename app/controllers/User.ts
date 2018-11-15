@@ -6,7 +6,6 @@ import passport from 'passport';
 import { User } from '../entity/User';
 
 
-
 class UserController{
 
     private userFind : User;
@@ -16,9 +15,9 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
-        
-        await util.getQuery(res,req, User)
+    public getAll = (req, res: Response, next: NextFunction): void | Response => {
+
+        util.getQuery(res,req, User)
             .then((data) => {
 
                 res.status(data.results.length === data.query.countAll ? 200 : 206)
@@ -46,9 +45,9 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public create = (req: Request, res: Response, next: NextFunction): void => {
+    public create = async (req: Request, res: Response, next: NextFunction) => {
 
-        let user = User.createUser(req);
+        let user = await User.createUser(req);
 
         getRepository(User).save(user)            
             .then((user: User) => {
@@ -100,7 +99,7 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public login = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => 
+    public login = (req: Request, res: Response, next: NextFunction): Promise<void | Response> => 
     {
 
         return passport.authenticate('local', { session: false }, (err, passportUser: User, info) => {
@@ -123,7 +122,7 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public current = (req, res: Response, next: NextFunction): void | Response => {
+    public current = (req: any, res: Response, next: NextFunction): void | Response => {
 
         getRepository(User).findOne({id: req.payload.id})     
             .then((user : User) => {

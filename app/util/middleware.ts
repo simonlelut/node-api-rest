@@ -1,7 +1,8 @@
-import {Request, Response, NextFunction} from 'express';
+import { Response, NextFunction} from 'express';
 import { getConnection } from "typeorm";
 import LocalStrategy from "passport-local";
 import {User} from "../entity/User";
+import { getRepository } from "typeorm";
 
 export const strategy = new LocalStrategy(
     {
@@ -22,12 +23,18 @@ export const strategy = new LocalStrategy(
 
 )
 
-export const needsGroup = (group: string) => {
-    return (req : Request, res : Response, next : NextFunction): void | Response => {
-
-        if(req.user && req.user.group === group)
-            next();
+/**
+ * 
+ * @param group string
+ */
+export const needsGroup = (groupLevel: number) => {
+    return async (req , res : Response, next : NextFunction)=> {
         
+        let user = await getRepository(User).findOne({id: req.payload.id});    
+
+        if(user.group.level >= groupLevel)
+            next();
+            
         res.status(401).send({message: "Unauthorized"});
     };
 }

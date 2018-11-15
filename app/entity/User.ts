@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, getRepository} from "typeorm";
 import Joi from 'joi';
 import { querySchemaGeneric } from './../util/schema';
 import faker from 'faker';
@@ -35,7 +35,8 @@ export class User {
 
     @Column({
         length: 250,
-        type: "varchar"
+        type: "varchar",
+        unique: true
     })
     email!: string;
 
@@ -86,18 +87,24 @@ export class User {
 
     static addUsers = async (number: Number) => {
 
-        let users = Array(number)
+        let group = await getRepository(Group).findOne({name: "user"});
+
+        let users= Array(number)
             .fill(null)
-            .map( _ =>{
+            .map(_ =>{
                 let user  = new User();
                 user.name = faker.name.firstName().toLocaleLowerCase();
                 user.lastname = faker.name.lastName().toLocaleLowerCase();
+                user.email = faker.internet.email(user.name,user.lastname, faker.random.number(1000).toString() )
                 user.create_at = faker.date.past();
                 user.image = "https://s3.eu-west-3.amazonaws.com/nodeapirest/default.png";
+                user.group = group
+                user.setPassword("demo");    
+                
                 return user;
             })
-        
-        await getConnection().getRepository(User).save(users, { chunk: 10000 })
+
+        await getRepository(User).save(users, { chunk: 10000 })
     }
 
     
@@ -127,7 +134,7 @@ export class User {
     
 
 
-    static createUser = (req :Request): User => {
+    static createUser = async (req :Request): Promise<User> => {
         let user = req.body.user;
         let finalUser = new User();
         finalUser.lastname = user.lastname;
@@ -135,7 +142,7 @@ export class User {
         finalUser.create_at = new Date();
         finalUser.email = user.email;
 
-        //finalUser.group = "efeef";
+        finalUser.group = await getRepository(Group).findOne({name: "user"});
 
         if(req.file)
             finalUser.image = req.file.location;

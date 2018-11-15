@@ -48,16 +48,16 @@ export class Application {
         if(process.env.NODE_ENV !== "test"){
             app.use(morgan('combined'));
             await createConnection(config.databaseConfig)
-            .catch(e =>{
-                console.log(e);
-                process.exit(1);
-            });
+                .catch(e =>{
+                    console.log(e);
+                    process.exit(1);
+                });
         } else
             await createConnection(config.databaseTest)
-            .catch(e =>{
-                console.log(e);
-                process.exit(1);
-            });
+                .catch(e =>{
+                    console.log(e);
+                    process.exit(1);
+                });
         
         passport.use(strategy);
 
@@ -82,10 +82,10 @@ export class Application {
 
         this.server= http.createServer(app);
 
-        var io = require('socket.io')(this.server);
-
         // server handlers
         this.server.on('error', (error) => console.error(error));
+
+        
          
         console.info("database connection set");
 

@@ -3,10 +3,9 @@ import UserController from '../controllers/User';
 import {User} from "../entity/User";
 import {getConnection} from "typeorm";
 const validator = require('express-joi-validation')({passError: true})
-import path  from "path";
 import { auth } from '../util/auth';
-
-
+import { GroupLevel }from '../entity/Group'
+import { needsGroup } from '../util/middleware';
 
 
 /*
@@ -14,13 +13,16 @@ import { auth } from '../util/auth';
 */
 export default express()
 
-    .get('/', auth.required, validator.query(User.querySchema),auth.optional ,UserController.getAll)
-    .get('/login', auth.required , UserController.current)
-    .get('/:userId', auth.required , UserController.get)
-    .post('/login', auth.optional, UserController.login)
+    .get('/', auth.optional, validator.query(User.querySchema),auth.optional , UserController.getAll)
     .post('/', auth.optional, UserController.create)
+
+    .get('/login', auth.required , UserController.current)
+    .post('/login', auth.optional, UserController.login)
+   
+    .get('/:userId', auth.required, needsGroup(GroupLevel.USER)  , UserController.get)
     .put('/:userId', auth.required, UserController.put)
     .delete('/:userId', auth.required, UserController.delete)
+
     .param("userId", UserController.userId)
 
 
