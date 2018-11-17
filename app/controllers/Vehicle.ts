@@ -16,7 +16,7 @@ class VehicleController{
      * @param  {NextFunction} next
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
-        
+        /*
         await util.getQuery(res, req, Vehicle)
             .then((data) => {
 
@@ -26,7 +26,7 @@ class VehicleController{
             .catch((error: Error) => {
                 next(error);
             });
-        
+        */
     }
 
     /**

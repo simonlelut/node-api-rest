@@ -15,17 +15,22 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public getAll = (req, res: Response, next: NextFunction): void | Response => {
+    public getAll = async (req: Request, res: Response, next: NextFunction) => {
 
-        util.getQuery(res,req, User)
-            .then((data) => {
+        let result = await util.getQuery(res,req);
 
-                res.status(data.results.length === data.query.countAll ? 200 : 206)
-                        .json({meta: util.getMeta(data.query), users : User.getUsers(data.results)})
-            })
-            .catch((error: Error) => {
-                next(error);
-            });
+        let [users, count] = await getRepository(User)
+            .createQueryBuilder("user")
+            .leftJoinAndSelect("user.group", "group")
+            .where(result.filter)
+            .skip(result.skip)
+            .take(result.per_page)
+            .orderBy(result.order)
+            .getManyAndCount();
+
+        res.status(users.length === count ? 200 : 206)
+                .json({meta: util.getMeta(result, count), users : User.getUsers(users)})
+           
     }
 
     /**
@@ -39,7 +44,6 @@ class UserController{
     }
 
     
-
     /**
      * @param  {Request} req
      * @param  {Response} res
@@ -145,7 +149,7 @@ class UserController{
      */
     public userId = (_req: Request, res: Response, next: NextFunction, id: number): void  => {
 
-        getRepository(User).findOne({id: id})
+        getRepository(User).findOne(id, {relations: ["group"]})
             .then((user) => {
 
                 if(!user)

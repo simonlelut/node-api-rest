@@ -30,11 +30,10 @@ export const strategy = new LocalStrategy(
 export const needsGroup = (groupLevel: number) => {
     return async (req , res : Response, next : NextFunction)=> {
         
-        let user = await getRepository(User).findOne({id: req.payload.id});    
-
+        let user = await getRepository(User).findOne(req.payload.id, {relations: ["group"]});  
+        
         if(user.group.level >= groupLevel)
-            next();
-            
+            return next();
         res.status(401).send({message: "Unauthorized"});
     };
 }

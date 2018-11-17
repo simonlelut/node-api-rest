@@ -58,7 +58,7 @@ export class User {
         type: "varchar",
         nullable: true
     })
-    image!: string;
+    profile_image!: string;
 
 
     @ManyToOne(type => Group, group => group.users)
@@ -97,7 +97,7 @@ export class User {
                 user.lastname = faker.name.lastName().toLocaleLowerCase();
                 user.email = faker.internet.email(user.name,user.lastname, faker.random.number(1000).toString() )
                 user.create_at = faker.date.past();
-                user.image = "https://s3.eu-west-3.amazonaws.com/nodeapirest/default.png";
+                user.profile_image = "https://s3.eu-west-3.amazonaws.com/nodeapirest/default.png";
                 user.group = group
                 user.setPassword("demo");    
                 
@@ -109,30 +109,25 @@ export class User {
 
     
     public getUser = () => {
-        let data = {
+        return {
             user: {
                 id    : this.id,
                 name  : this.name,
                 lastname: this.lastname,
-                profile_image : this.image,
+                profile_image : this.profile_image,
                 create_at: moment.utc(this.create_at).format("DD-MM-YYYY"),
                 email: this.email,
-                group : this.group,
+                group : this.group.name,
                 token: this.generateJWT(),
             }
         };
-        
-        return data
     }
 
     static getUsers = (users) => {
-        
         return users.map((user: User) => {
             return user.getUser();
         });
     }
-    
-
 
     static createUser = async (req :Request): Promise<User> => {
         let user = req.body.user;
@@ -144,24 +139,16 @@ export class User {
 
         finalUser.group = await getRepository(Group).findOne({name: "user"});
 
-        if(req.file)
-            finalUser.image = req.file.location;
-
         finalUser.setPassword(user.password);
 
         return finalUser;
     }
     
     public updateUser = (user : User): void => {
-
-        if(user.lastname)
-            this.lastname = user.lastname;
-
-        if(user.name)
-            this.name = user.name;
-
-        if(user.image)
-            this.image = user.image;
+        
+        
+        Object.assign(this, user)
+       
     }
 
 

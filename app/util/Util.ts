@@ -6,7 +6,7 @@ class Util{
    
 
 
-    public getQuery = async ( res: Response, req: Request, classe: any)=>{
+    public getQuery = async ( res: Response, req: Request)=>{
         let query = req.query;
         
         let result: any = {};
@@ -74,28 +74,15 @@ class Util{
             //delete last and
             result.filter = result.filter.substring(0, result.filter.length - 3);
         }
-        let data = await getConnection()
-            .getRepository(classe)
-            .createQueryBuilder()
-            .where(result.filter)
-            .skip(result.skip)
-            .take(result.per_page)
-            .orderBy(result.order)
-            .getManyAndCount();
-        
-        result.countAll = data[1]
 
-        result.numberPages = Math.floor(result.countAll / result.per_page);
-        result.numberPages = result.numberPages === 0 ? 1 : result.numberPages;
-
-        return {
-            query: result,
-            results: data[0]
-        }
+        return result;
     }
 
+    getMeta(data, count: number) {
 
-    getMeta(data) {
+        data.countAll = count;
+        data.numberPages = Math.floor(data.countAll / data.per_page);
+        data.numberPages = data.numberPages === 0 ? 1 : data.numberPages;
         return {
             "total_count"       : data.countAll,
             "limit_per_pages"   : data.maxPerPage,
