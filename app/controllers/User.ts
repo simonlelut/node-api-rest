@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import util from "../util/Util";
 import passport from 'passport';
 import { User } from '../entity/User';
+import { validationResult } from 'express-validator/check';
 
 
 class UserController{
@@ -51,6 +52,14 @@ class UserController{
      */
     public create = async (req: Request, res: Response, next: NextFunction) => {
 
+
+        const errors = validationResult(req);
+
+
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
+        }
+
         let user = await User.createUser(req);
 
         getRepository(User).save(user)            
@@ -67,11 +76,11 @@ class UserController{
      * @param  {Response} res
      * @param  {NextFunction} next
      */
-    public put = (req: Request, res: Response, next: NextFunction): void => {
+    public put = (req: Request, res: Response, next: NextFunction) => {
 
-       
-        this.userFind.updateUser(req.body.user);
         
+        this.userFind.updateUser(req.body.user);
+    
         getRepository(User).save(this.userFind)            
             .then((user : User) => {
                 res.status(200).json(user.getUser());
@@ -79,6 +88,7 @@ class UserController{
             .catch((error: Error) => {
                 next(error);
             });
+        
     }
 
     /**

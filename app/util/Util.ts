@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import {getConnection, Like} from "typeorm";
 import _ from 'lodash';
 
 class Util{

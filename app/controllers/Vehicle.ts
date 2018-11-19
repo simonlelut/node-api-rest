@@ -1,7 +1,6 @@
-import {Request, Response, NextFunction, json} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {Vehicle} from "../entity/Vehicle";
 import {getConnection} from "typeorm";
-import util from "../util/Util";
 
 /**
  * 

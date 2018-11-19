@@ -1,7 +1,5 @@
 import { Request } from 'express';
 import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from "typeorm";
-import Joi from 'joi';
-import { querySchemaGeneric } from './../util/schema';
 import faker from 'faker';
 import {getConnection} from "typeorm";
 import moment from "moment";
@@ -68,17 +66,7 @@ export class Vehicle {
         nullable: true
     })
     image!: string;
-
-
-    static filters : string[] = ["modele","year_vehicle"];
-
-    static querySchema = querySchemaGeneric.keys({
-        modele: Joi
-            .string(),
-        year_vehicle: Joi
-            .string()
-            .regex(/\b[^\d\W]+\b/),
-    })
+    
 
     static addVehicles = async (number: Number) => {
 

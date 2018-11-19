@@ -1,9 +1,6 @@
 import { Request } from 'express';
 import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, getRepository} from "typeorm";
-import Joi from 'joi';
-import { querySchemaGeneric } from './../util/schema';
 import faker from 'faker';
-import {getConnection} from "typeorm";
 import jwt from 'jsonwebtoken';
 import crypto  from "crypto";
 import moment from "moment";
@@ -17,8 +14,7 @@ export class User {
 
     @Column({
         length: 100,
-        type: "varchar",
-        nullable: true
+        type: "varchar"
     })
     name!: string;
 
@@ -42,14 +38,12 @@ export class User {
 
     @Column({
         length: 100,
-        type: "varchar",
-        nullable: true
+        type: "varchar"
     })
     lastname!: string;
 
     @Column({
-        type: "date",
-        nullable: true
+        type: "date"
     })
     create_at!: Date;
 
@@ -63,27 +57,6 @@ export class User {
 
     @ManyToOne(type => Group, group => group.users)
     group: Group
-
-    static filters : string[] = ["name","lastname"];
-
-    static querySchema = querySchemaGeneric.keys({
-        sort: Joi
-            .string(),
-        desc: Joi
-            .string(),
-        name: Joi
-            .string()
-            .regex(/\b[^\d\W]+\b/),
-        lastname: Joi
-            .string()
-            .regex(/\b[^\d\W]+\b/),
-        day: Joi
-            .string(),
-        month: Joi
-            .string(),
-        year: Joi
-            .string(),
-    })
 
     static addUsers = async (number: Number) => {
 
@@ -146,9 +119,7 @@ export class User {
     
     public updateUser = (user : User): void => {
         
-        
-        Object.assign(this, user)
-       
+        Object.assign(this, user);
     }
 
 

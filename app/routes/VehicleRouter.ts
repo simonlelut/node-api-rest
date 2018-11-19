@@ -2,14 +2,13 @@ import express from 'express';
 import VehicleController from '../controllers/vehicle';
 import {Vehicle} from "../entity/Vehicle";
 import {getConnection} from "typeorm";
-const validator = require('express-joi-validation')({passError: true})
 
 /*
     /vehicles
 */
 export default express()
 
-    .get('/', validator.query(Vehicle.querySchema),VehicleController.getAll)
+    .get('/',VehicleController.getAll)
     .get('/:vehicleId', VehicleController.get)
     .post('/', VehicleController.create)
     
