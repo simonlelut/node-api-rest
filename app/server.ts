@@ -14,6 +14,7 @@ import responseTime  from "response-time";
 import session from "express-session";
 import passport from 'passport'
 import { strategy } from './util/middleware';
+import { Group, GroupLevel } from './entity/Group';
 
 //for typescript
 debug('ts-express:server');
@@ -48,6 +49,19 @@ export class Application {
         if(process.env.NODE_ENV !== "test"){
             app.use(morgan('combined'));
             await createConnection(config.databaseConfig)
+                .then(connection => {
+                    
+                    connection.getRepository(Group).count()
+                        .then(async count => {
+                            if(count === 0){
+                                const admin = new Group("admin",GroupLevel.ADMIN);
+                                const user = new Group("user",GroupLevel.USER);
+                                
+                                await connection.getRepository(Group).insert(admin);
+                                await connection.getRepository(Group).insert(user);
+                            }
+                        })
+                })
                 .catch(e =>{
                     console.log(e);
                     process.exit(1);
