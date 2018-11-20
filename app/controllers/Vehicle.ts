@@ -1,6 +1,7 @@
-import {Request, Response, NextFunction} from 'express';
-import {Vehicle} from "../entity/Vehicle";
-import {getConnection} from "typeorm";
+import { Request, Response, NextFunction } from 'express';
+import { Vehicle } from "../entity/Vehicle";
+import { getConnection, getRepository } from "typeorm";
+import util from "../util/Util";
 
 /**
  * 
@@ -15,17 +16,19 @@ class VehicleController{
      * @param  {NextFunction} next
      */
     public getAll = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
-        /*
-        await util.getQuery(res, req, Vehicle)
-            .then((data) => {
 
-                res.status(data.results.length === data.query.countAll ? 200 : 206)
-                    .json({meta: util.getMeta(data.query), content : Vehicle.getVehicles(data.results)})
-            })
-            .catch((error: Error) => {
-                next(error);
-            });
-        */
+       let result = await util.getQuery(res,req);
+
+       let [vehicles, count] = await getRepository(Vehicle)
+           .createQueryBuilder("vehicle")
+           .where(result.filter)
+           .skip(result.skip)
+           .take(result.per_page)
+           .orderBy(result.order)
+           .getManyAndCount();
+
+       res.status(vehicles.length === count ? 200 : 206)
+            .json({meta: util.getMeta(result, count), vehicles : Vehicle.getVehicles(vehicles)})
     }
 
     /**
@@ -48,7 +51,7 @@ class VehicleController{
         let vehicle = Vehicle.createVehicle(req);
 
         getConnection().getRepository(Vehicle).save(vehicle)            
-        .then(() => {
+        .then( _ => {
             res.status(201).json(Vehicle.getVehicle(vehicle));
         })
         .catch((error: Error) => {

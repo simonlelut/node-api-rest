@@ -10,12 +10,11 @@ export const strategy = new LocalStrategy(
         passwordField: 'password'
     },
     (email, password, done) => {
-
-        getConnection().getRepository(User).findOne({email: email})
+        
+        getConnection().getRepository(User).findOne({email: email}, {relations: ["group"]})
             .then((user: User) => {
-                
                 if(!user || !user.validatePassword(password))
-                    return done(null, false, { errors: { 'email or password': 'is invalid' } });
+                    return done(null, false, { error: 'email or password invalid' });
 
                 return done(null, user);
             })

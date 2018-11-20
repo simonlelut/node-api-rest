@@ -52,7 +52,6 @@ class UserController{
      */
     public create = async (req: Request, res: Response, next: NextFunction) => {
 
-
         const errors = validationResult(req);
 
 
@@ -115,7 +114,6 @@ class UserController{
      */
     public login = (req: Request, res: Response, next: NextFunction): Promise<void | Response> => 
     {
-
         return passport.authenticate('local', { session: false }, (err, passportUser: User, info) => {
            
             if(err) 
@@ -123,7 +121,7 @@ class UserController{
           
             if(passportUser) 
                 return res.json(passportUser.getUser());
-          
+            
             return res.status(400).json(info);
 
         })(req, res, next);
@@ -161,7 +159,7 @@ class UserController{
 
         getRepository(User).findOne(id, {relations: ["group"]})
             .then((user) => {
-
+                
                 if(!user)
                     return res.status(404).json("this User doesn't exist !");
 

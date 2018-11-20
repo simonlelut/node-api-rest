@@ -110,6 +110,7 @@ export class User {
         finalUser.create_at = new Date();
         finalUser.email = user.email;
 
+
         finalUser.group = await getRepository(Group).findOne({name: "user"});
 
         finalUser.setPassword(user.password);

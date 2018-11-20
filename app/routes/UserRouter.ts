@@ -12,8 +12,8 @@ import { bodyValidator, login } from '../util/validator/UserValidator';
 */
 export default express()
 
-    .get('/', auth.optional, auth.optional, UserController.getAll)
-    .post('/',bodyValidator, UserController.create)
+    .get('/', auth.optional, UserController.getAll)
+    .post('/register',bodyValidator, UserController.create)
 
     .get('/login', auth.required , UserController.current)
     .post('/login',login, auth.optional, UserController.login)

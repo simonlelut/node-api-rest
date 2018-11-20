@@ -14,7 +14,9 @@ export const bodyValidator =  checkSchema({
     },
     "user.email" : {
         in: "body",
-        isEmail: true
+        isEmail: {
+            errorMessage : "Email error",
+        }
     },
     "user.name": {
         in: 'body',
