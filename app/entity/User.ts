@@ -1,10 +1,12 @@
+import { Vehicle } from './Vehicle';
 import { Request } from 'express';
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, getRepository} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, getRepository, OneToMany} from "typeorm";
 import faker from 'faker';
 import jwt from 'jsonwebtoken';
 import crypto  from "crypto";
 import moment from "moment";
 import { Group } from './Group';
+import { type } from 'os';
 faker.locale = "fr";
 @Entity()
 export class User {
@@ -58,6 +60,9 @@ export class User {
     @ManyToOne(type => Group, group => group.users)
     group: Group
 
+    @OneToMany(type => Vehicle, vehicle => vehicle.user)
+    vehicles: Vehicle[]
+
     static addUsers = async (number: Number) => {
 
         let group = await getRepository(Group).findOne({name: "user"});
@@ -77,9 +82,9 @@ export class User {
                 return user;
             })
 
-        await getRepository(User).save(users, { chunk: 10000 })
+        return await getRepository(User).save(users, { chunk: 10000 })
     }
-
+    
     
     public getUser = () => {
         return {
@@ -102,8 +107,7 @@ export class User {
         });
     }
 
-    static createUser = async (req :Request): Promise<User> => {
-        let user = req.body.user;
+    static createUser = async (user): Promise<User> => {
         let finalUser = new User();
         finalUser.lastname = user.lastname;
         finalUser.name = user.name;
@@ -124,7 +128,7 @@ export class User {
     }
 
 
-    private setPassword = (password): void => {
+    public setPassword = (password): void => {
         this.salt = crypto.randomBytes(16).toString('hex');
         this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
     }

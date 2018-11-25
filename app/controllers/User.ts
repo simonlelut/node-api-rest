@@ -18,7 +18,7 @@ class UserController{
      */
     public getAll = async (req: Request, res: Response, next: NextFunction) => {
 
-        let result = await util.getQuery(res,req);
+        let result = await util.getQuery(res,req)
 
         let [users, count] = await getRepository(User)
             .createQueryBuilder("user")
@@ -54,12 +54,11 @@ class UserController{
 
         const errors = validationResult(req);
 
-
         if (!errors.isEmpty()) {
           return res.status(422).json({ errors: errors.array() });
         }
 
-        let user = await User.createUser(req);
+        let user = await User.createUser(req.body.user);
 
         getRepository(User).save(user)            
             .then((user: User) => {

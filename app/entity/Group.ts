@@ -3,13 +3,10 @@ import { User } from './User'
 import faker from 'faker';
 faker.locale = "fr";
 
-
-
 export const enum GroupLevel {
     ADMIN = 1,
     USER = 0
 }
-
 @Entity()
 export class Group {
 

@@ -1,5 +1,7 @@
+import { bodyParser } from 'body-parser';
+import { User } from './User';
 import { Request } from 'express';
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne} from "typeorm";
 import faker from 'faker';
 import {getConnection} from "typeorm";
 import moment from "moment";
@@ -66,7 +68,9 @@ export class Vehicle {
         nullable: true
     })
     image!: string;
-    
+
+    @ManyToOne(type => User, user => user.vehicles)
+    user: User
 
     static addVehicles = async (number: Number) => {
 
@@ -87,7 +91,7 @@ export class Vehicle {
                 return vehicle;
             })
         
-        await getConnection().getRepository(Vehicle).save(vehicles, { chunk: 10000 })
+        await getConnection().getRepository(Vehicle).save(vehicles, { chunk: 1000 })
     }
 
     static getVehicle = (vehicle : Vehicle) => {
@@ -100,7 +104,8 @@ export class Vehicle {
             "type_moteur"       : vehicle.type_moteur,
             "couleur"           : vehicle.couleur,
             "annee"             : vehicle.year_vehicle,
-            "kilometrage"       : vehicle.kilometrage
+            "kilometrage"       : vehicle.kilometrage,
+            "image"             : vehicle.image
         };
         
         return data
@@ -123,7 +128,8 @@ export class Vehicle {
         vehicle.couleur =  req.body.couleur;
         vehicle.year_vehicle = req.body.annee
         vehicle.kilometrage = req.body.kilometrage;
-
+        vehicle.user = req.payload.id;
+        vehicle.image = req.body.image;
         return vehicle;
     }
 

@@ -27,9 +27,29 @@ class VehicleController{
            .orderBy(result.order)
            .getManyAndCount();
 
+           
        res.status(vehicles.length === count ? 200 : 206)
             .json({meta: util.getMeta(result, count), vehicles : Vehicle.getVehicles(vehicles)})
     }
+
+
+    /**
+     * @param  {Request} req
+     * @param  {Response} res
+     * @param  {NextFunction} next
+     */
+    public getAllByUser = async (req: Request, res: Response, next: NextFunction): Promise<void | Response> => {
+
+        let result = await util.getQuery(res,req);
+ 
+        let [vehicles, count] = await getRepository(Vehicle)
+            .createQueryBuilder("vehicle")
+            .where("vehicle.user = :userId ", {userId : req.payload.id} )
+            .getManyAndCount();
+ 
+        res.status(vehicles.length === count ? 200 : 206)
+             .json({meta: util.getMeta(result, count), vehicles : Vehicle.getVehicles(vehicles)})
+     }
 
     /**
      * @param  {Request} req
@@ -38,7 +58,7 @@ class VehicleController{
      */
     public get = (_req: Request, res: Response): void => {
         
-        res.status(200).json(Vehicle.getVehicle(this.vehicleFind));
+        res.status(200).json({vehicle : Vehicle.getVehicle(this.vehicleFind)});
     }
 
     /**

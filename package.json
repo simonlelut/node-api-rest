@@ -17,10 +17,11 @@
     "postgresql"
   ],
   "scripts": {
-    "dev": "tsc && nodemon",
-    "test": "mocha --require ts-node/register test/main.ts --exit",
+    "dev": "nodemon",
+    "test": "mocha --require ts-node/register test/main.ts --exit --timeout 10000",
     "deploy": "pm2 deploy ecosystem.json production",
-    "swagger": "swagger project edit"
+    "swagger": "swagger project edit",
+    "debug" : "nodemon --inspect ./app/server"
   },
   "author": {
     "name": "Lelut Simon",
@@ -30,6 +31,7 @@
   "repository": "https://github.com/simonlelut/node-api-rest",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.361.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
@@ -48,6 +50,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^7.4.3",
+    "react-s3-uploader": "^4.8.0",
     "reflect-metadata": "^0.1.12",
     "response-time": "^2.3.2",
     "swagger-ui-express": "^4.0.1",

@@ -31,6 +31,6 @@ export default express()
         
     })
     .get('/test/delete', async (req,res) =>{
-        await getConnection().getRepository(User).query(`TRUNCATE TABLE "user" RESTART IDENTITY;`)
+        await getConnection().getRepository(User).query(`TRUNCATE TABLE "user" RESTART IDENTITY cascade`)
         res.status(200).json({message : `delete all users`});
     })

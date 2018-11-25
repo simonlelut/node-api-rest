@@ -2,18 +2,21 @@ import express from 'express';
 import VehicleController from '../controllers/vehicle';
 import {Vehicle} from "../entity/Vehicle";
 import {getConnection} from "typeorm";
-
+import { auth } from '../util/auth';
 /*
     /vehicles
 */
 export default express()
 
     .get('/',VehicleController.getAll)
+
+    .get('/user', auth.required, VehicleController.getAllByUser)
     .get('/:vehicleId', VehicleController.get)
-    .post('/', VehicleController.create)
+     
+    .post('/', auth.required, VehicleController.create)
     
-    .put('/:vehicleId', VehicleController.put)
-    .delete('/:vehicleId', VehicleController.delete)
+    .put('/:vehicleId', auth.required, VehicleController.put)
+    .delete('/:vehicleId', auth.required , VehicleController.delete)
 
     .param("vehicleId", VehicleController.vehicleId)
     .get('/populate/:nbPopulate', async (req,res) =>{
@@ -22,7 +25,7 @@ export default express()
         
     })
     .get('/test/delete', async (req,res) =>{
-        await getConnection().getRepository(Vehicle).query(`TRUNCATE TABLE vehicle RESTART IDENTITY;`)
+        await getConnection().getRepository(Vehicle).query(`TRUNCATE TABLE vehicle RESTART IDENTITY `)
         res.status(200).json({message : `delete all vehicles`});
     })
 
