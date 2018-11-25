@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "dev": "nodemon",
-    "test": "mocha --require ts-node/register test/main.ts --exit --timeout 10000",
+    "test": "mocha --require ts-node/register test/mainTest.ts --exit --timeout 10000",
     "deploy": "pm2 deploy ecosystem.json production",
     "swagger": "swagger project edit",
     "debug" : "nodemon --inspect ./app/server"

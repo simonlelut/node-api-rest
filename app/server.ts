@@ -72,9 +72,9 @@ export class Application {
 
         next();
       });
-    app.use(morgan("combined"));
+    
     if (process.env.NODE_ENV !== "test") {
-      
+      app.use(morgan("combined"));
       config.databaseConfig.entities = repo;
       connect = createConnection(config.databaseConfig);
         
