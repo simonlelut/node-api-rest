@@ -16,14 +16,8 @@ router.get('/config', (req,res) =>{
 });
 
 
-
-
 router.use('/users', UserRouter);
 router.use('/vehicles', VehicleRouter);
-
-
-
-
 
 router.all('*',(req,res) => {
     res.status(404).send({msg:"route not found"})
