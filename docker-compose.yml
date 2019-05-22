@@ -10,11 +10,13 @@ services:
     volumes:
       - .:/node-api-rest
   db:
-    image: postgres:latest
+    image: postgres:alpine
     restart: always
     ports:
       - "5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

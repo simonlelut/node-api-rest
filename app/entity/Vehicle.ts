@@ -1,4 +1,4 @@
-import { bodyParser } from 'body-parser';
+import * as bodyParser from 'body-parser';
 import { User } from './User';
 import { Request } from 'express';
 import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne} from "typeorm";

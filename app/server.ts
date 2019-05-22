@@ -9,12 +9,13 @@ import cors from "cors";
 import helmet from "helmet";
 import "reflect-metadata";
 import morgan from "morgan";
-import { createConnection, Connection } from "typeorm";
+import { createConnection } from "typeorm";
 import responseTime from "response-time";
 import session from "express-session";
 import passport from "passport";
 import { strategy } from "./util/middleware";
 import { Group, GroupLevel } from "./entity/Group";
+
 import AWS from "aws-sdk";
 import { promises } from "fs";
 //for typescript
@@ -26,12 +27,13 @@ export class Application {
   public static async getApp(config?: any) {
     //if no config set use default
     config = config ? config : require("../config/config.json");
-
+    
     //variables
     const port: number = 3000;
-    const app: express.Express = express();
+    const app = express();
     let connect = null;
-    const repo = [`${__dirname}\\entity\\*.ts`];
+    let entities = [`${__dirname}\\entity\\*`];
+
     //global variables
     app.set("port", port);
     app.set("config", config);
@@ -72,20 +74,24 @@ export class Application {
 
         next();
       });
-    
+      
     if (process.env.NODE_ENV !== "test") {
+      
       app.use(morgan("combined"));
-      config.databaseConfig.entities = repo;
+      config.databaseConfig.entities = entities;
+      
       connect = createConnection(config.databaseConfig);
-        
-    } else{
-      config.databaseTest.entities = repo;
+      
+    }else{
+      config.databaseTest.entities = entities;
+      
       connect = createConnection(config.databaseTest);
     }
 
-    return connect
-      .then(async connection => {
+    return connect.then(async connection => {
+
         console.info("database connection set");
+
         let count = await connection.getRepository(Group).count()
            
         if(count === 0){
@@ -95,7 +101,7 @@ export class Application {
             await connection.getRepository(Group).insert(admin);
             await connection.getRepository(Group).insert(user);
         }
-
+        /* AWS
         var albumBucketName = "nodeapirest";
         var bucketRegion = "us-east-1";
         var IdentityPoolId = "us-east-1:59d1301e-8942-4a78-af30-9351c5c64a0f";
@@ -118,7 +124,7 @@ export class Application {
             //getFileKeyDir: function() { return "/images/"; }
           })
         );
-
+          */
         //Routes
         app.use(router);
 
@@ -134,6 +140,7 @@ export class Application {
         return app;
     })
     .catch(e => {
+      
       console.log(e);
       process.exit(1);
     });
