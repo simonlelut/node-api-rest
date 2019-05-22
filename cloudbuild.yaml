@@ -1,3 +1,3 @@
 steps:
 - name: ‘docker/compose:1.19.0’
-  args: [‘up’, ‘-d’]
+  args: [-f, ‘"docker-compose.yml", "up", "-d", "--build"]
