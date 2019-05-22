@@ -1,6 +1,6 @@
 import express from 'express';
 import UserRouter from './UserRouter';
-//import VehicleRouter from './VehicleRouter';
+import VehicleRouter from './VehicleRouter';
 import { auth } from '../util/auth';
 const router = express();
 
@@ -12,11 +12,11 @@ router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerDocument));
 
 router.get('/config', (req,res) =>{
-    res.status(200).json(req.app.get('config').databaseConfig.host)
+    res.status(200).json(req.app.get('config').databaseConfig)
 });
 
 router.use('/users', UserRouter);
-//router.use('/vehicles', VehicleRouter);
+router.use('/vehicles', VehicleRouter);
 
 router.all('*',(req,res) => {
     res.status(404).send({msg:"route not found"})

@@ -9,7 +9,7 @@ import cors from "cors";
 import helmet from "helmet";
 import "reflect-metadata";
 import morgan from "morgan";
-import { createConnection } from "typeorm";
+import { createConnection , Entity} from "typeorm";
 import responseTime from "response-time";
 import session from "express-session";
 import passport from "passport";
@@ -17,7 +17,7 @@ import { strategy } from "./util/middleware";
 import { Group, GroupLevel } from "./entity/Group";
 
 import AWS from "aws-sdk";
-import { promises } from "fs";
+
 //for typescript
 debug("ts-express:server");
 
@@ -32,8 +32,7 @@ export class Application {
     const port: number = 3000;
     const app = express();
     let connect = null;
-    let entities = [`${__dirname}\\entity\\*`];
-
+    let entities = [`${__dirname}/entity/*`, `${__dirname}\\entity\\*`];
     //global variables
     app.set("port", port);
     app.set("config", config);

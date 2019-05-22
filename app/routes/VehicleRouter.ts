@@ -2,11 +2,11 @@ import express from 'express';
 import {Vehicle} from "../entity/Vehicle";
 import {getConnection} from "typeorm";
 import { auth } from '../util/auth';
-//import VehicleController from '../controllers/vehicle';
+import VehicleController from '../controllers/Vehicle';
 
 /*
     /vehicles
-
+*/
 export default express()
 
     .get('/',VehicleController.getAll)
@@ -28,4 +28,4 @@ export default express()
     .get('/test/delete', async (req,res) =>{
         await getConnection().getRepository(Vehicle).query(`TRUNCATE TABLE vehicle RESTART IDENTITY `)
         res.status(200).json({message : `delete all vehicles`});
-    })*/
+    })

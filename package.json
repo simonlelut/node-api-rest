@@ -17,7 +17,7 @@
       "postgresql"
    ],
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "tsc && nodemon build/server --watch build",
       "dev": "nodemon --exec ts-node ./app/server.ts --watch ./app",
       "test": "mocha --require ts-node/register test/mainTest.ts --exit --timeout 10000",
       "deploy": "pm2 deploy ecosystem.json production",
@@ -56,10 +56,10 @@
       "response-time": "^2.3.2",
       "swagger-ui-express": "^4.0.4",
       "typeorm": "0.2.17",
-      "typescript": "^3.4.5",
       "yamljs": "^0.3.0"
    },
    "devDependencies": {
+      "@types/node": "^8.0.29",
       "chai": "^4.2.0",
       "chai-http": "^4.3.0",
       "faker": "^4.1.0",
@@ -67,7 +67,6 @@
       "mocha-typescript": "^1.1.17",
       "ts-node": "3.3.0",
       "tslint": "^5.16.0",
-      "@types/node": "^8.0.29",
-      "typescript": "3.3.3333"
+      "typescript": "^3.4.5"
    }
 }
