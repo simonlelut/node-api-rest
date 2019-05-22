@@ -4,12 +4,11 @@ import LocalStrategy from "passport-local";
 import {User} from "../entity/User";
 import { getRepository } from "typeorm";
 
-export const strategy = new LocalStrategy(
-    {
+export const strategy = new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password'
     },
-    (email, password, done) => {
+    (email: string, password: string, done: Function ) : void => {
         
         getConnection().getRepository(User).findOne({email: email}, {relations: ["group"]})
             .then((user: User) => {
@@ -19,7 +18,6 @@ export const strategy = new LocalStrategy(
                 return done(null, user);
             })
     }
-
 )
 
 /**
