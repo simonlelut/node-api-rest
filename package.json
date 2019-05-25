@@ -17,12 +17,12 @@
       "postgresql"
    ],
    "scripts": {
-      "start": "tsc && nodemon build/server --watch build",
-      "dev": "nodemon --exec ts-node ./app/server.ts --watch ./app",
+      "start": "tsc && nodemon build/server --watch build ",
+      "dev": "nodemon --exec ts-node ./app/server.ts --watch ./app ",
       "test": "mocha --require ts-node/register test/mainTest.ts --exit --timeout 10000",
       "deploy": "pm2 deploy ecosystem.json production",
       "swagger": "swagger project edit",
-      "debug": "nodemon --inspect ./app/server"
+      "debug": "nodemon --exec ts-node ./app/server.ts --watch ./app --inspect ./app/server"
    },
    "author": {
       "name": "Lelut Simon",
@@ -35,6 +35,7 @@
       "aws-sdk": "^2.460.0",
       "body-parser": "^1.19.0",
       "compression": "^1.7.4",
+      "config": "^3.1.0",
       "cookie-parser": "^1.4.4",
       "cors": "^2.8.4",
       "express": "^4.17.0",

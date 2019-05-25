@@ -15,19 +15,23 @@ import session from "express-session";
 import passport from "passport";
 import { strategy } from "./util/middleware";
 import { Group, GroupLevel } from "./entity/Group";
+import conf from "config"
 
 import AWS from "aws-sdk";
 
 //for typescript
 debug("ts-express:server");
 
+
 export class Application {
   static server: http.Server;
 
   public static async getApp(config?: any) {
+
     //if no config set use default
-    config = config ? config : require("../config/config.json");
-    
+    //config = config ? config : require("../config/default.json");
+    config = config ? config : conf;
+
     //variables
     const port: number = 3000;
     const app = express();

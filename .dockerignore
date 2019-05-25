@@ -17,5 +17,4 @@ yarn.lock
 deploy_key
 key.pem
 encryptFiles.tar
-node_modules
 package-lock.json
