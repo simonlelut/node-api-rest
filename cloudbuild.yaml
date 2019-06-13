@@ -1,3 +1,0 @@
-steps:
-- name: ‘eu.gcr.io/testdevops-241010/docker-compose’
-  args: ["up"]
