@@ -6,7 +6,8 @@ phases:
       docker: 18
   pre_build:
     commands:
-      -docker login --username=simon --email=sim95850@hotmail.fr     
+      - echo Logging to docker
+      - docker login --username=simonlelut --email=sim95850@hotmail.fr     
   build:
     commands:
       - echo Build started on `date`
