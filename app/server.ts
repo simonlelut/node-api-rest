@@ -21,8 +21,6 @@ import AWS from "aws-sdk";
 
 //for typescript
 debug("ts-express:server");
-
-
 export class Application {
   static server: http.Server;
 
