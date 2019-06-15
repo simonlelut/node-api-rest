@@ -9,16 +9,6 @@
         "synchronize": true,
         "logging" : false
     },
-    "databaseTest" : {
-        "type": "postgres",
-        "host": "localhost",
-        "port": 32768,
-        "username": "postgres",
-        "password": "",
-        "database": "test",
-        "synchronize": true,
-        "logging" : true
-    },
     "uri" : "http://localhost:3000",
     "maxPerPage" : 50,
     "defaultPerPage" : 20
