@@ -6,7 +6,7 @@ services:
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t $DOCKER_USERNAME/nodeapi .
-  - docker tag $DOCKER_USERNAME/sinatra $DOCKER_USERNAME/nodeapi
+  - docker tag $DOCKER_USERNAME/nodeapi $DOCKER_USERNAME/nodeapi
   - docker push $DOCKER_USERNAME/nodeapi
   - docker run -d -p 3000:3000 $DOCKER_USERNAME/nodeapi
 
