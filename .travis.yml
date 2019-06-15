@@ -2,3 +2,8 @@ language: node_js
 
 services:
   - docker
+
+before_install:
+  - docker build -t simonlelut/nodeapi .
+  - docker run -d -p 3000:3000 simonlelut/nodeapi
+  - docker ps -a
