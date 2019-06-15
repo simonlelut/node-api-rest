@@ -6,7 +6,7 @@ services:
 before_install:
   - docker build -t simonlelut/nodeapi .
   - docker run -d -p 3000:3000 simonlelut/nodeapi
-  - docker run simonlelut/node-api-rest /bin/sh -c "npm run start"
+  - docker run simonlelut/nodeapi /bin/sh -c "npm run start"
 
 script:
   - npm run start
