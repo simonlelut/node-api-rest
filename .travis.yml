@@ -9,4 +9,4 @@ before_install:
   - docker run simonlelut/nodeapi /bin/sh -c "npm run test"
 
 script:
-  - npm run test
+  - docker ps
