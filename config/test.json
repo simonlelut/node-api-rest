@@ -1,0 +1,25 @@
+{
+    "databaseConfig" : {
+        "type": "postgres",
+        "host": "db",
+        "port": 5432,
+        "username": "postgres",
+        "password": "",
+        "database": "postgres",
+        "synchronize": false,
+        "logging" : true
+    },
+    "databaseTest" : {
+        "type": "postgres",
+        "host": "db",
+        "port": 5432,
+        "username": "postgres",
+        "password": "",
+        "database": "test",
+        "synchronize": true,
+        "logging" : false
+    },
+    "uri" : "http://localhost:3000",
+    "maxPerPage" : 50,
+    "defaultPerPage" : 20
+}
