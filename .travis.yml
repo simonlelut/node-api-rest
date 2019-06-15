@@ -8,4 +8,4 @@ before_install:
   - docker run -d -p 3000:3000 simonlelut/nodeapi
 
 script:
-  - docker --run simonlelut/nodeapi /bin/sh -c "npm run test"
+  - docker run --rm simonlelut/nodeapi /bin/sh -c "npm run test"
