@@ -1,11 +1,11 @@
 {
     "databaseConfig" : {
         "type": "postgres",
-        "host": "localhost",
+        "host": "ec2-46-137-113-157.eu-west-1.compute.amazonaws.com",
         "port": 5432,
-        "username": "postgres",
-        "password": "",
-        "database": "postgres",
+        "username": "gkuwqgjdiuhfig",
+        "password": "99afeee691d76225bb0088033b974d55a8356efb7d92cce22321f2b3d8c95847",
+        "database": "daj3i027bp6oc6",
         "synchronize": true,
         "logging" : false
     },

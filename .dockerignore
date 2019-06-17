@@ -12,7 +12,6 @@ LICENSE
 .vscode
 build
 npm-debug.log
-build
 yarn.lock
 deploy_key
 key.pem

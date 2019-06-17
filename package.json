@@ -20,7 +20,6 @@
       "start": "tsc && nodemon build/server --watch build ",
       "dev": "nodemon --exec ts-node ./app/server.ts --watch ./app ",
       "test": "mocha --require ts-node/register test/mainTest.ts --exit --timeout 10000",
-      "deploy": "pm2 deploy ecosystem.json production",
       "swagger": "swagger project edit",
       "debug": "nodemon --exec ts-node ./app/server.ts --watch ./app --inspect ./app/server"
    },
@@ -68,6 +67,6 @@
       "mocha-typescript": "^1.1.17",
       "ts-node": "3.3.0",
       "tslint": "^5.16.0",
-      "typescript": "^3.4.5"
+      "typescript": "^3.1.6"
    }
 }
