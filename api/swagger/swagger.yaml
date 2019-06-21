@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: 1.0.1
+  version: 1.0.2
   title: User api
   description: Nice API
 basePath: /users
