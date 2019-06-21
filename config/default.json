@@ -1,11 +1,11 @@
 {
     "databaseConfig" : {
         "type": "postgres",
-        "host": "localhot",
+        "host": "localhost",
         "port": 5432,
-        "username": "database",
-        "password": "",
-        "database": "daj3i027bp6oc6",
+        "username": "simonpg",
+        "password": "password",
+        "database": "nodeapi",
         "synchronize": true,
         "logging" : false,
         "ssl" : true

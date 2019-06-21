@@ -5,4 +5,3 @@ build/
 tmp/
 temp/
 yarn.lock
-config/default.json
