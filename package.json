@@ -56,7 +56,7 @@
       "reflect-metadata": "^0.1.10",
       "response-time": "^2.3.2",
       "swagger-ui-express": "^4.0.4",
-      "typeorm": "0.2.17",
+      "typeorm": "0.2.25",
       "yamljs": "^0.3.0"
    },
    "devDependencies": {
